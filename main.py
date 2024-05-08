@@ -50,19 +50,42 @@ class FEM_Element:
 # Later on we might do it throught the cmd or a pop-up-window
 
 def getGeometryInputs():
-    length, width, number_of_net_points, order_num_int = 100, 20, 30, 1
+    width, height, number_of_net_points, order_num_int = 90, 20, 30, 1
 
-    return length, width, number_of_net_points, order_num_int
+    return width, height, number_of_net_points, order_num_int
 
-def createQuadNet(length, width, number_of_net_points):
+def createQuadNet(width, height, number_of_net_points):
 
     FEM_knots = np.array(number_of_net_points, FEM_Knot)  #creates an array of FEM-Knots
+    y_amount = width / number_of_net_points  # amount of knots in y-direction
+    x_amount = (number_of_net_points/y_amount)
+    y_offset = height / (y_amount - 1)  # -1 because first knot is on height y = 0
+    x_offset = width / (x_amount - 1)
+    global_knot_number = 1
+    global_equation_number = 1
+    for i in range(x_amount):
+        for j in range(y_amount):
+            if(i != 0 & i != x_amount & y != 0 & i != y_amount):
+                knot = FEM_Knot(i * x_offset, j * y_offset, global_knot_number, global_equation_number)
+                global_equation_number += 1
+            else:
+                knot = FEM_Knot(i * x_offset, j * y_offset, global_knot_number, 0)
+            global_knot_number += 1
+            FEM_knots[global_knot_number] = knot
 
-    return FEM_knots
+
+    FEM_Elements = []  # List of FEM Elements so that .append() works
+
+    # create each fem element and add to FEM_Elements
+
+
+    FEM_Elements = np.array(FEM_Elements)  # Converts List to Numpy Array
+
+    return FEM_knots, FEM_Elements
 
 
 #%%
 
-length, width, number_of_net_points, order_num_int = getGeometryInputs()
-QUAD_net = createQuadNet(length, width, number_of_net_points)
+width, height, number_of_net_points, order_num_int = getGeometryInputs()
+QUAD_net = createQuadNet(width, height, number_of_net_points)
 

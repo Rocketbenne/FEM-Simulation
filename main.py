@@ -65,7 +65,7 @@ def createQuadNet(width, height, number_of_net_points):
     global_equation_number = 1
     for i in range(x_amount):
         for j in range(y_amount):
-            if(i != 0 & i != x_amount & y != 0 & i != y_amount):
+            if(i != 0 & i != x_amount & j != 0 & j != y_amount):
                 knot = FEM_Knot(i * x_offset, j * y_offset, global_knot_number, global_equation_number)
                 global_equation_number += 1
             else:

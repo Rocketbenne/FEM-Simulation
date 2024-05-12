@@ -49,18 +49,47 @@ class FEM_Element:
 # First we let the user "input" be done throught putting numbers in the variables
 # Later on we might do it throught the cmd or a pop-up-window
 
-def getGeometryInputs():
+# used for testing the program, just wirte the values in here
+def getGeometryInputs_hard_coded():
     width, height, number_of_net_points, order_num_int = 90, 20, 30, 1
 
     return width, height, number_of_net_points, order_num_int
 
+# for finished version, lets user input values and error-checks them
+def getGeometryInputs():
+    width, height, number_of_net_points, order_num_int = 0, 0, 0, 0
+
+    print("Input the Width: ")
+    width = getNumberFromUser()
+    print("Input the Height: ")
+    height = getNumberFromUser()
+    print("Input the Number of Net-Points: ")
+    number_of_net_points = getNumberFromUser()
+    print("Input the Order of the Numerical Integration: ")
+    order_num_int = getNumberFromUser()
+
+    return width, height, number_of_net_points, order_num_int
+
+# get a number from the user throught the console and checks that it's a number and it's greater than 0
+def getNumberFromUser():
+    while(1):
+        number = input()
+        if(number.isnumeric()):
+            if(int(number) > 0):
+                return int(number)
+        print("\nPlease enter a Number greater than 0.\n")
+
+# creates all instances of FEM-Knots and FEM-Elements
 def createQuadNet(width, height, number_of_net_points):
 
     FEM_knots = np.array(number_of_net_points, FEM_Knot)  #creates an array of FEM-Knots
     y_amount = width / number_of_net_points  # amount of knots in y-direction
     x_amount = (number_of_net_points/y_amount)
+
+    # PRODUCES DIVISION BY ZERO ERROR IF WIDTH = NUMBER_OF_NET_POINTS
     y_offset = height / (y_amount - 1)  # -1 because first knot is on height y = 0
     x_offset = width / (x_amount - 1)
+
     global_knot_number = 1
     global_equation_number = 1
     for i in range(x_amount):

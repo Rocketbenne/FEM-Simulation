@@ -25,6 +25,10 @@ Local Knot Numbers starting from bottom right in a counter-clockwise rotation
     | 1     2 | 1     2 |
     1---------4---------7
 
+    Outest Layer: Global Knot Number
+    Second Layer: Local Knot Number
+    Number in the Middle: Global Element Number
+
 '''
 
 
@@ -70,21 +74,22 @@ def getGeometryInputs():
 
     return width, height, number_of_net_points, order_num_int
 
-# get a number from the user throught the console and checks that it's a number and it's greater than 0
+# get a number from the user throught the console and makes error checks
 def getNumberFromUser():
     while(1):
         number = input()
-        if(number.isnumeric()):
-            if(int(number) > 0):
+        if(number.isnumeric()):  # checks if value is numeric
+            if(int(number) > 0):  # checks if numeric value is greater than 0
                 return int(number)
         print("\nPlease enter a Number greater than 0.\n")
 
 # creates all instances of FEM-Knots and FEM-Elements
 def createQuadNet(width, height, number_of_net_points):
 
-    FEM_knots = np.array(number_of_net_points, FEM_Knot)  #creates an array of FEM-Knots
-    y_amount = width / number_of_net_points  # amount of knots in y-direction
-    x_amount = (number_of_net_points/y_amount)
+    FEM_knots = np.empty(number_of_net_points, FEM_Knot)  #creates an array of FEM-Knots
+    
+    y_amount = int(width / number_of_net_points)  # amount of knots in y-direction
+    x_amount = int(number_of_net_points/y_amount)
 
     # PRODUCES DIVISION BY ZERO ERROR IF WIDTH = NUMBER_OF_NET_POINTS
     y_offset = height / (y_amount - 1)  # -1 because first knot is on height y = 0
@@ -99,8 +104,16 @@ def createQuadNet(width, height, number_of_net_points):
                 global_equation_number += 1
             else:
                 knot = FEM_Knot(i * x_offset, j * y_offset, global_knot_number, 0)
+            FEM_knots[global_knot_number - 1] = knot  # -1 because variable is 1 at start
             global_knot_number += 1
-            FEM_knots[global_knot_number] = knot
+
+    # TODO: Test with weird numers, (things that make uneven amounts etc)
+    # TODO: Maybe change inputs of amount of knots to 2 Inputs, one in x and one in y
+    
+    # Test Output to Check if Knots are correctly placed 
+    #for x in FEM_knots: 
+    #    if(isinstance(x, FEM_Knot)):
+    #        print("X " + str(x.pos_x) + "  Y " + str(x.pos_y))
 
 
     FEM_Elements = []  # List of FEM Elements so that .append() works
@@ -115,6 +128,6 @@ def createQuadNet(width, height, number_of_net_points):
 
 #%%
 
-width, height, number_of_net_points, order_num_int = getGeometryInputs()
+width, height, number_of_net_points, order_num_int = getGeometryInputs_hard_coded()
 QUAD_net = createQuadNet(width, height, number_of_net_points)
 

@@ -42,13 +42,9 @@ def gauss2(n, m, func, lower_boundaryX, upper_boundaryX, lower_boundaryY, upper_
             Xj = newXj(xj[j])
             value += J*wi[i]*wj[j]*func(Xi, Xj)
 
-    print(value)
     return value
 
 
-
-gauss(5, lambda x: 2*x**2, 2, 4)
-gauss2(5, 5,lambda x,y:x**2+y,1,2,5,4)
 
 
 

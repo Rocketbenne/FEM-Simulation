@@ -4,8 +4,6 @@ import time as time
 from scipy.sparse import coo_matrix
 from sklearn.neighbors import BallTree
 import sys
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches  # used to show the bounding box in the matplotlib plot
 
 from input_handling import *
 from mesh_generation import *
@@ -36,7 +34,8 @@ Local Knot Numbers starting from bottom right in a counter-clockwise rotation
 
 '''
 # Knotengleichungsarray / Node-Equation-Array
-# Inputs: amount of nodes in the domain, coordinates of the domain 
+# Inputs: amount of nodes in the domain
+#         coordinates of the domain 
 # Output: Array containing node-equation-numbers
 def get_node_equation_array(array_size, mesh_coords):
 
@@ -65,11 +64,12 @@ def get_node_equation_array(array_size, mesh_coords):
     return node_equation_array
 
 # Gleichungsarray / Equation-Array
-# Inputs: local node number, element number
+# Inputs: array containing the finite elements of the domain
+#         local node number [1 -4]
+#         element number
 # Output: global equation number
-def EQ(local_number, element_number):
-
-    return 0
+def EQ(finite_elements, local_number, element_number):
+    return finite_elements[element_number - 1].get_global_node_numbers()[local_number - 1]
 
 
 #%%
@@ -98,3 +98,7 @@ print('--------------------------------------')
 
 for i in range((NODE_AMOUNT-1)**2):
     print(finite_elements[i].get_global_element_number(), finite_elements[i].get_global_node_numbers())
+
+print(EQ(finite_elements, 3, 39))
+print(EQ(finite_elements, 4, 63))
+

@@ -12,7 +12,8 @@ class FEM_Element:
         return self.global_element_number
 
 # Generation of the finite elements in the domain
-# Inputs: Array containing the the node equation numbers, amount of nodes per axis
+# Inputs: Array containing the the node equation numbers
+#         amount of nodes per axis
 # Output: Array containing the finite Elements
 def element_generation(node_equation_array, dimension):
     elements = np.empty((dimension - 1)**2, dtype=FEM_Element)

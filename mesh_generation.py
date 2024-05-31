@@ -10,6 +10,10 @@ import matplotlib.patches as patches  # used to show the bounding box in the mat
 
 NODE_AMOUNT = 10  # meaning in x and in y direction respectively
 
+
+# Creates the nodes of the mesh
+# Inputs: width and height of the domain
+# Output: coordinates of the nodes
 def createMesh(width, height):
 
     x_coords = np.zeros(NODE_AMOUNT, dtype=float)
@@ -29,6 +33,8 @@ def createMesh(width, height):
 
     return mesh_coords
 
+# visualizes the nodes of the mesh in a matplotlib-plot
+# Input: coordinates of the nodes
 def visualize_mesh(mesh_coords):
 
     # Draws each point on the plot

@@ -9,6 +9,7 @@ import matplotlib.patches as patches  # used to show the bounding box in the mat
 
 from input_handling import *
 from mesh_generation import *
+from finite_element import *
 
 #%%
 
@@ -34,10 +35,12 @@ Local Knot Numbers starting from bottom right in a counter-clockwise rotation
     Number in the Middle: Global Element Number
 
 '''
-# Knotengleichungsarray
+# Knotengleichungsarray / Node-Equation-Array
+# Inputs: amount of nodes in the domain, coordinates of the domain 
+# Output: Array containing node-equation-numbers
 def get_node_equation_array(array_size, mesh_coords):
 
-    globale_gleichungsnummer = np.zeros(array_size, dtype=int)
+    node_equation_array = np.zeros(array_size, dtype=int)
 
     min_x = np.min(mesh_coords[:, 0])
     max_x = np.max(mesh_coords[:, 0])
@@ -48,27 +51,50 @@ def get_node_equation_array(array_size, mesh_coords):
     for (x, y) in mesh_coords:
         #print(x, y)
         if(x != min_x and x != max_x and y != min_y and y != max_y):
-            globale_gleichungsnummer[i] = j
+            node_equation_array[i] = j
             j += 1
         i += 1
 
     # converts mesh_coords to tuples, tuples can be indexed using tuple[0] and tuple[1]
-    mesh_coords_tuples = [tuple(coord) for coord in mesh_coords]
+    #mesh_coords_tuples = [tuple(coord) for coord in mesh_coords]
 
-    return dict(zip(mesh_coords_tuples, globale_gleichungsnummer))   
+    #TODO: unsure if dict is good to use here, maybe tuple would be better
+    #return dict(zip(mesh_coords_tuples, node_equation_array))  
 
+    # just returns node_equation_array atm
+    return node_equation_array
+
+# Gleichungsarray / Equation-Array
+# Inputs: local node number, element number
+# Output: global equation number
+def EQ(local_number, element_number):
+
+    return 0
 
 
 #%%
 
 width, height, order_num_int = getGeometryInputs_hard_coded()
 
+# creates the mesh with all the nodes
 mesh_coords = createMesh(width, height)
 
-visualize_mesh(mesh_coords)
+# gets amount of coordinate pairs
+array_size = mesh_coords.shape[0]  
 
-array_size = mesh_coords.shape[0]  # gets amount of coordinate pairs
-
+# creates the array containing the node-equations
 NE_array = get_node_equation_array(array_size, mesh_coords)
 
-#print(NE_array)
+# creates the finite elements of the domain
+finite_elements = element_generation(NE_array, NODE_AMOUNT)
+
+
+# Testing
+visualize_mesh(mesh_coords)
+
+print(NE_array)
+
+print('--------------------------------------')
+
+for i in range((NODE_AMOUNT-1)**2):
+    print(finite_elements[i].get_global_element_number(), finite_elements[i].get_global_node_numbers())

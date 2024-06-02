@@ -43,10 +43,3 @@ def gauss2(n, m, func, lower_boundaryX, upper_boundaryX, lower_boundaryY, upper_
             value += J*wi[i]*wj[j]*func(Xi, Xj)
 
     return value
-
-
-
-
-
-
-

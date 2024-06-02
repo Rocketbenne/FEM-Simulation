@@ -36,6 +36,9 @@ Local Knot Numbers starting from bottom right in a counter-clockwise rotation
 '''
 
 
+
+
+
 #%%
 
 width, height, order_num_int = getGeometryInputs_hard_coded()
@@ -51,6 +54,8 @@ NE_array = get_node_equation_array(array_size, mesh_coords)
 
 # creates the finite elements of the domain
 finite_elements = element_generation(NE_array, NODE_AMOUNT)
+
+assembling_algorithm(finite_elements, array_size)
 
 
 # Testing

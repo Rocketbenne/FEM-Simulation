@@ -21,13 +21,6 @@ def get_node_equation_array(array_size, mesh_coords):
             j += 1
         i += 1
 
-    # converts mesh_coords to tuples, tuples can be indexed using tuple[0] and tuple[1]
-    #mesh_coords_tuples = [tuple(coord) for coord in mesh_coords]
-
-    #TODO: unsure if dict is good to use here, maybe tuple would be better
-    #return dict(zip(mesh_coords_tuples, node_equation_array))  
-
-    # just returns node_equation_array atm
     return node_equation_array
 
 # Gleichungsarray / Equation-Array
@@ -41,17 +34,16 @@ def EQ(finite_elements, local_number, element_number):
 
 # Assembling-Algorithm from the VO
 # Inputs: array of finite-element-objects
-#         amount of nodes in the domain
+#         amount of element nodes
+#         System-matrix K
 # Output: System-matrix K
-def assembling_algorithm(finite_elements, number_of_nodes):
-
-    K = np.zeros([number_of_nodes, number_of_nodes])
+def assembling_algorithm(finite_elements, number_of_element_nodes, K):
 
     for e in range(1, finite_elements.size):
-        for a in range(1, number_of_nodes):
+        for a in range(1, number_of_element_nodes):
             eq1 = EQ(finite_elements, a, e)
             if(eq1 > 0):
-                for b in range(1, number_of_nodes):
+                for b in range(1, number_of_element_nodes):
                     eq2 = EQ(finite_elements, b, e)
                     if(eq2 > 0):
                         # Some funny things

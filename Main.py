@@ -53,21 +53,23 @@ array_size = mesh_coords.shape[0]
 NE_array = get_node_equation_array(array_size, mesh_coords)
 
 # creates the finite elements of the domain
-finite_elements = element_generation(NE_array, NODE_AMOUNT)
+finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS)
 
-assembling_algorithm(finite_elements, array_size)
+# System-matrix K
+K = np.zeros([array_size, array_size])
+
+assembling_algorithm(finite_elements, 4, K)
 
 
 # Testing
-visualize_mesh(mesh_coords)
+#visualize_mesh(mesh_coords)
 
-print(NE_array)
+#print(NE_array)
 
-print('--------------------------------------')
+#print('--------------------------------------')
 
-for i in range((NODE_AMOUNT-1)**2):
-    print(finite_elements[i].get_global_element_number(), finite_elements[i].get_global_node_numbers())
+#for i in range((NODE_AMOUNT_PER_AXIS - 1)**2):
+#    print(finite_elements[i].get_global_element_number(), finite_elements[i].get_global_node_numbers())
 
-print(EQ(finite_elements, 3, 39))
-print(EQ(finite_elements, 4, 63))
-
+#print(EQ(finite_elements, 3, 39))
+#print(EQ(finite_elements, 4, 63))

@@ -2,32 +2,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches  # used to show the bounding box in the matplotlib plot
 
-
-
 #%%
-# Create the Net/Mesh with all it's nodes
-# Returns coodinates of the nodes
-
-NODE_AMOUNT = 10  # meaning in x and in y direction respectively
-
+NODE_AMOUNT_PER_AXIS = 10  # meaning in x and in y direction respectively
 
 # Creates the nodes of the mesh
 # Inputs: width and height of the domain
 # Output: coordinates of the nodes
 def createMesh(width, height):
 
-    x_coords = np.zeros(NODE_AMOUNT, dtype=float)
-    y_coords = np.zeros(NODE_AMOUNT, dtype=float)
+    x_coords = np.zeros(NODE_AMOUNT_PER_AXIS, dtype=float)
+    y_coords = np.zeros(NODE_AMOUNT_PER_AXIS, dtype=float)
 
-    x_offset = width / (NODE_AMOUNT - 1)
-    y_offset = height / (NODE_AMOUNT - 1)
+    x_offset = width / (NODE_AMOUNT_PER_AXIS - 1)
+    y_offset = height / (NODE_AMOUNT_PER_AXIS - 1)
 
-    for i in range(NODE_AMOUNT):
+    for i in range(NODE_AMOUNT_PER_AXIS):
         x_coords[i] = i * x_offset
         y_coords[i] = i * y_offset
     
-    x_coords = np.repeat(x_coords, NODE_AMOUNT)
-    y_coords = np.tile(y_coords, NODE_AMOUNT)
+    x_coords = np.repeat(x_coords, NODE_AMOUNT_PER_AXIS)
+    y_coords = np.tile(y_coords, NODE_AMOUNT_PER_AXIS)
 
     mesh_coords = np.column_stack((x_coords, y_coords))
 

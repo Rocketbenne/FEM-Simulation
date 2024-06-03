@@ -50,7 +50,7 @@
   }
 }]]></component>
   <component name="RunManager">
-    <configuration name="GUI" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+    <configuration name="Main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="NSDE_24" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -63,7 +63,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="C:\Users\max24\Desktop\NSDE_24\GUI.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\max24\Desktop\NSDE_24\Main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />

@@ -3,7 +3,7 @@ import numpy as np
 import time as time
 from scipy.sparse import coo_matrix
 from sklearn.neighbors import BallTree
-import sys
+import csv
 
 from input_handling import *
 from mesh_generation import *
@@ -15,9 +15,9 @@ from finite_element_procedure import *
 '''
 Numbering of Fem_Knots and Elements 
 
-Global Knot and Equation Numbers
+Global Node and Equation Numbers
 From left top to right top, then next row to the right ( as one reads )
-Local Knot Numbers starting from bottom right in a counter-clockwise rotation
+Local Node Numbers starting from bottom right in a counter-clockwise rotation
 
     1---------2---------3
     | 4     3 | 4     3 |
@@ -29,8 +29,8 @@ Local Knot Numbers starting from bottom right in a counter-clockwise rotation
     | 1     2 | 1     2 |
     7---------8---------9
 
-    Outest Layer: Global Knot Number
-    Second Layer: Local Knot Number
+    Outest Layer: Global Node Number
+    Second Layer: Local Node Number
     Number in the Middle: Global Element Number
 
 '''
@@ -73,3 +73,18 @@ assembling_algorithm(finite_elements, 4, K)
 
 #print(EQ(finite_elements, 3, 39))
 #print(EQ(finite_elements, 4, 63))
+
+# array containing the solutions in each node
+values = np.zeros([array_size])
+
+# Write values to a .csv file
+filename = 'program_output.csv'
+
+file = open(filename, 'w', newline='')
+
+fields = ['coordinates', 'value']
+writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
+writer.writeheader()
+
+for i, value in enumerate(values):
+        writer.writerow({'coordinates': mesh_coords[i], 'value': values[i]})

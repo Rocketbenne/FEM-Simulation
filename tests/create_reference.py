@@ -27,10 +27,10 @@ values = np.tile(values, 10)
 # Write values to a .csv file
 filename = 'tests/reference.csv'
 
-file = open(filename, 'w')
+file = open(filename, 'w', newline='')
 
 fields = ['coordinates', 'value']
-writer = csv.DictWriter(file, fieldnames=fields)
+writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
 writer.writeheader()
 
 for i, value in enumerate(values):

@@ -3,3 +3,4 @@
 
 ## build files
 __pycache__/
+tests/__pycache__/

@@ -19,6 +19,8 @@ def createMesh(width, height):
     for i in range(NODE_AMOUNT_PER_AXIS):
         x_coords[i] = i * x_offset
         y_coords[i] = i * y_offset
+
+    y_coords = y_coords[::-1]  # reverses the array
     
     x_coords = np.repeat(x_coords, NODE_AMOUNT_PER_AXIS)
     y_coords = np.tile(y_coords, NODE_AMOUNT_PER_AXIS)

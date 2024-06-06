@@ -45,7 +45,7 @@ width, height, order_num_int = getGeometryInputs_hard_coded()
 
 # creates the mesh with all the nodes
 mesh_coords = createMesh(width, height)
-
+print(mesh_coords)
 # gets amount of coordinate pairs
 array_size = mesh_coords.shape[0]
 

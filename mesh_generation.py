@@ -10,20 +10,17 @@ NODE_AMOUNT_PER_AXIS = 10  # meaning in x and in y direction respectively
 # Output: coordinates of the nodes
 def createMesh(width, height):
 
-    x_coords = np.zeros(NODE_AMOUNT_PER_AXIS, dtype=float)
-    y_coords = np.zeros(NODE_AMOUNT_PER_AXIS, dtype=float)
+    x_coords = np.zeros(NODE_AMOUNT_PER_AXIS**2, dtype=float)
+    y_coords = np.zeros(NODE_AMOUNT_PER_AXIS**2, dtype=float)
 
     x_offset = width / (NODE_AMOUNT_PER_AXIS - 1)
     y_offset = height / (NODE_AMOUNT_PER_AXIS - 1)
 
     for i in range(NODE_AMOUNT_PER_AXIS):
-        x_coords[i] = i * x_offset
-        y_coords[i] = i * y_offset
-
-    y_coords = y_coords[::-1]  # reverses the array
-    
-    x_coords = np.repeat(x_coords, NODE_AMOUNT_PER_AXIS)
-    y_coords = np.tile(y_coords, NODE_AMOUNT_PER_AXIS)
+        for j in range(NODE_AMOUNT_PER_AXIS):
+            index = i * NODE_AMOUNT_PER_AXIS + j
+            x_coords[index] = j * x_offset
+            y_coords[index] = i * y_offset
 
     mesh_coords = np.column_stack((x_coords, y_coords))
 

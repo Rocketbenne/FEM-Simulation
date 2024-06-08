@@ -60,7 +60,7 @@ def getLineInputs(width, height):
 
     return start, end, value
 
-def getLineInputs_hard_coded(width, height):
+def getLineInputs_hard_coded():
     start = (10, 160)
     end = (57, 100)
     value = 5

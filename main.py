@@ -1,8 +1,5 @@
 #%%
 import numpy as np
-import time as time
-from scipy.sparse import coo_matrix
-from sklearn.neighbors import BallTree
 import csv
 
 from input_handling import *
@@ -44,7 +41,7 @@ Local Node Numbers starting from bottom right in a counter-clockwise rotation
 
 width, height, order_num_int = getGeometryInputs_hard_coded()
 
-line_start, line_end, line_value_function = getLineInputs_hard_coded(width, height)
+line_start, line_end, line_value_function = getLineInputs_hard_coded()
 
 # creates the mesh with all the nodes
 mesh_coords = createMesh(width, height)
@@ -52,6 +49,8 @@ mesh_coords = createMesh(width, height)
 # get the coordinates of the Line
 line_coords = getLineCoordinates(line_start, line_end, mesh_coords)
 # TODO: if for this line_coords, so that it is choosable to have a line or not
+
+line_values = getLineValues(line_coords, "{x}+{y}")
 
 # gets amount of coordinate pairs
 array_size = mesh_coords.shape[0]

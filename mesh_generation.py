@@ -22,16 +22,23 @@ def createMesh(width, height):
             x_coords[index] = j * x_offset
             y_coords[index] = i * y_offset
 
+    y_coords = y_coords[::-1]
+
     mesh_coords = np.column_stack((x_coords, y_coords))
 
     return mesh_coords
 
 # visualizes the nodes of the mesh in a matplotlib-plot
 # Input: coordinates of the nodes
-def visualize_mesh(mesh_coords):
+def visualize_mesh(mesh_coords, line_coords):
 
     # Draws each point on the plot
     plt.scatter(mesh_coords[:, 0], mesh_coords[:, 1])
+
+    # Draws the points of the line in red
+    x_coords = [point[0] for point in line_coords]
+    y_coords = [point[1] for point in line_coords]
+    plt.scatter(x_coords, y_coords, color = 'r', label='Line')
 
     # Corner coordinate and Size of rectangle
     left, bottom = np.min(mesh_coords[:, 0]), np.min(mesh_coords[:, 1])
@@ -43,5 +50,6 @@ def visualize_mesh(mesh_coords):
     # Add the rectangle to the plot
     plt.gca().add_patch(rect)
        
+    #plt.legend()   
     plt.show()
     return 0

@@ -9,6 +9,7 @@ from input_handling import *
 from mesh_generation import *
 from finite_element import *
 from finite_element_procedure import *
+from line import *
 
 #%%
 
@@ -43,14 +44,20 @@ Local Node Numbers starting from bottom right in a counter-clockwise rotation
 
 width, height, order_num_int = getGeometryInputs_hard_coded()
 
+line_start, line_end, line_value_function = getLineInputs_hard_coded(width, height)
+
 # creates the mesh with all the nodes
 mesh_coords = createMesh(width, height)
-print(mesh_coords)
+
+# get the coordinates of the Line
+line_coords = getLineCoordinates(line_start, line_end, mesh_coords)
+# TODO: if for this line_coords, so that it is choosable to have a line or not
+
 # gets amount of coordinate pairs
 array_size = mesh_coords.shape[0]
 
 # creates the array containing the node-equations
-NE_array = get_node_equation_array(array_size, mesh_coords)
+NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
 
 # creates the finite elements of the domain
 finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS)
@@ -62,9 +69,10 @@ assembling_algorithm(finite_elements, 4, K)
 
 
 # Testing
-#visualize_mesh(mesh_coords)
+#visualize_mesh(mesh_coords, line_coords)
 
-#print(NE_array)
+#for n in range(array_size):
+#    print(str(mesh_coords[n]) + "   " + str(NE_array[n]))
 
 #print('--------------------------------------')
 

@@ -42,7 +42,7 @@ def getNumberFromUserInRange(range):
 
 # user input for line with given value
 def getLineInputs(width, height):
-    start, end, value = 0, 0, 0
+    start, end, value_function = 0, 0, ""
 
     print("X-Coordinate of the Start-Point of the Line: ")
     x_start = getNumberFromUserInRange(width)
@@ -53,18 +53,18 @@ def getLineInputs(width, height):
     print("Y-Coordinate of the End-Point of the Line: ")
     y_end = getNumberFromUserInRange(height)
     print("Input the value of the Line: ")
-    value = getNumberFromUser()
+    value_function = input()
 
     start = (x_start, x_end)
     end = (y_start, y_end)
 
-    return start, end, value
+    return start, end, value_function
 
 def getLineInputs_hard_coded():
     start = (10, 160)
     end = (57, 100)
-    value = 5
+    value_function = "{x}+{y}"
 
-    return start, end, value
+    return start, end, value_function
 
 

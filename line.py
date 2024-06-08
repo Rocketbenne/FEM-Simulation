@@ -65,7 +65,6 @@ def getLineCoordinates(start, end, mesh_coords):
 # Output: Values of the Function at the Coordinates
 def getLineValues(line_coords, function):
 
-    print(function)
     values = []
 
     for (x, y) in line_coords:

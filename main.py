@@ -85,8 +85,9 @@ assembling_algorithm(finite_elements, 4, K)
 # print(EQ(finite_elements, 3, 39))
 # print(EQ(finite_elements, 4, 63))
 
-# print("-------------------")
-# print(boundary_nodes)
+print("-------------------")
+print(boundary_nodes)
+
 # array containing the solutions in each node
 values = np.zeros([array_size])
 

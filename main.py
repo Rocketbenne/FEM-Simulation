@@ -7,6 +7,7 @@ from mesh_generation import *
 from finite_element import *
 from finite_element_procedure import *
 from line import *
+from boundary_condition import *
 
 #%%
 
@@ -15,7 +16,7 @@ Numbering of Fem_Knots and Elements
 
 Global Node and Equation Numbers
 From left top to right top, then next row to the right ( as one reads )
-Local Node Numbers starting from bottom right in a counter-clockwise rotation
+Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
     1---------2---------3
     | 4     3 | 4     3 |
@@ -64,23 +65,28 @@ finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS)
 # System-matrix K
 K = np.zeros([array_size, array_size])
 
+boundary_nodes = get_boundary_nodes(mesh_coords,width,height)
+# apply_boundary_conditions()
 assembling_algorithm(finite_elements, 4, K)
 
 
-# Testing
-#visualize_mesh(mesh_coords, line_coords)
 
-#for n in range(array_size):
+# Testing
+# visualize_mesh(mesh_coords, line_coords)
+
+# for n in range(array_size):
 #    print(str(mesh_coords[n]) + "   " + str(NE_array[n]))
 
-#print('--------------------------------------')
+# print('--------------------------------------')
 
-#for i in range((NODE_AMOUNT_PER_AXIS - 1)**2):
+# for i in range((NODE_AMOUNT_PER_AXIS - 1)**2):
 #    print(finite_elements[i].get_global_element_number(), finite_elements[i].get_global_node_numbers())
 
-#print(EQ(finite_elements, 3, 39))
-#print(EQ(finite_elements, 4, 63))
+# print(EQ(finite_elements, 3, 39))
+# print(EQ(finite_elements, 4, 63))
 
+# print("-------------------")
+# print(boundary_nodes)
 # array containing the solutions in each node
 values = np.zeros([array_size])
 
@@ -95,3 +101,5 @@ writer.writeheader()
 
 for i, value in enumerate(values):
         writer.writerow({'coordinates': mesh_coords[i], 'value': values[i]})
+
+# %%

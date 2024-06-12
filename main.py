@@ -66,8 +66,19 @@ finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS)
 K = np.zeros([array_size, array_size])
 
 boundary_nodes = get_boundary_nodes(mesh_coords,width,height)
+
+
+boundary_conditions = [BoundaryCondition(1,"Dirichlet"),BoundaryCondition(2,"Dirichlet"),BoundaryCondition(3,"Dirichlet"),BoundaryCondition(4,"Dirichlet")]
+K = apply_boundary_conditions(K,
+boundary_conditions
+,boundary_nodes,width,height)
+
 # apply_boundary_conditions()
-assembling_algorithm(finite_elements, 4, K)
+K = assembling_algorithm(finite_elements, 4, K)
+
+
+    
+
 
 
 
@@ -85,8 +96,8 @@ assembling_algorithm(finite_elements, 4, K)
 # print(EQ(finite_elements, 3, 39))
 # print(EQ(finite_elements, 4, 63))
 
-print("-------------------")
-print(boundary_nodes)
+# print("-------------------")
+# print(boundary_nodes)
 
 # array containing the solutions in each node
 values = np.zeros([array_size])

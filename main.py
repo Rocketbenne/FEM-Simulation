@@ -65,6 +65,7 @@ assembling_algorithm(finite_elements, 4, K)
 #visualize_mesh(mesh_coords)
 
 #print(NE_array)
+#print(mesh_coords[1:4])
 
 #print('--------------------------------------')
 

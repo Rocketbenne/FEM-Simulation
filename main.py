@@ -77,7 +77,7 @@ boundary_conditions
 K = assembling_algorithm(finite_elements, 4, K)
 
 
-    
+
 
 
 
@@ -85,8 +85,7 @@ K = assembling_algorithm(finite_elements, 4, K)
 # Testing
 # visualize_mesh(mesh_coords, line_coords)
 
-# for n in range(array_size):
-#    print(str(mesh_coords[n]) + "   " + str(NE_array[n]))
+#print(NE_array)
 
 # print('--------------------------------------')
 

@@ -45,12 +45,25 @@ def gauss2(n, m, func, lower_boundaryX, upper_boundaryX, lower_boundaryY, upper_
     return value
 
 def dNi_(xi, eta):
+    """
+        :parameter
+        xi, eta : points for integration
+        :returns
+        J: Jacobian matrix
+    """
     dNi_deta = np.array([-0.25 * (1 - xi), -0.25 * (1 + xi), 0.25 * (1 + xi), 0.25 * (1 - xi)])
     dNi_dxi = np.array([-0.25 * (1 - eta), 0.25 * (1 - eta), 0.25 * (1 + eta), -0.25 * (1 + eta)])
     return dNi_dxi, dNi_deta
 
 
 def Jacobian(xi, eta , glob_coords):
+    """
+       :parameter
+       xi, eta : points for integration
+       glob_coords : global coordinates
+       :returns
+       J: Jacobian matrix
+    """
     dNi_dxi, dNi_deta = dNi_(xi, eta)
     J = np.zeros((2, 2))
     J[0, 0] = dNi_dxi[0]*glob_coords[0][0] + dNi_dxi[1]*glob_coords[1][0] + dNi_dxi[2]*glob_coords[2][0] + dNi_dxi[3]*glob_coords[3][0]
@@ -65,6 +78,14 @@ def Jacobian(xi, eta , glob_coords):
 
 
 def stiffnessMatrix(order,coords,mat_tensor):
+    """
+     :parameter
+     order: order of the stiffness matrix
+     coords: global coordinates of the Elements
+     mat_tensor: material tensor should be 2x2 ?
+     :returns
+     Ke: stiffness matrix
+     """
     xi,weight1 = np.polynomial.legendre.leggauss(order)
     eta, weight2 = np.polynomial.legendre.leggauss(order)
     Ke = np.zeros((4,4))
@@ -86,6 +107,7 @@ def stiffnessMatrix(order,coords,mat_tensor):
 
             Ke += (B.T @ mat_tensor @ B) * detJ * weight1[i] * weight2[j]
 
-    print(Ke)
+    #print(Ke)
+    return Ke
 
 

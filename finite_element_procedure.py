@@ -3,8 +3,9 @@ import numpy as np
 # Knotengleichungsarray / Node-Equation-Array
 # Inputs: amount of nodes in the domain
 #         coordinates of the domain 
+#         coordinates of the line in the domain with default empty array as default value
 # Output: Array containing node-equation-numbers
-def get_node_equation_array(array_size, mesh_coords):
+def get_node_equation_array(array_size, mesh_coords, line_coords = []):
 
     node_equation_array = np.zeros(array_size, dtype=int)
 
@@ -17,8 +18,18 @@ def get_node_equation_array(array_size, mesh_coords):
     for (x, y) in mesh_coords:
         #print(x, y)
         if(x != min_x and x != max_x and y != min_y and y != max_y):
-            node_equation_array[i] = j
-            j += 1
+            # check if this mesh_coord is one of the line_coordinates
+            found = False
+            for l in range(len(line_coords)):
+                if((x, y) == line_coords[l]):
+                    found = True
+                    break
+
+            #if((x, y) != line_coords[l] for l in range(len(line_coords))):
+            if(found == False):
+                node_equation_array[i] = j
+                j += 1
+                
         i += 1
 
     return node_equation_array

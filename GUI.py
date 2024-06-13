@@ -26,12 +26,13 @@ matrix_entry = MatrixGUI.MatrixGUI(root,5,1,3,1)
 matrix_label = MatrixGUI.MatrixGUI(root,5,1,1,0,lable_names)
 # Define a function to update the label with the entry text
 def save_input():
-    for entry in matrix_entry.get_matrix():
-        inputs.append(entry)
     for tensor in matrix_tensor.get_matrix():
         inputs.append(tensor)
+    for entry in matrix_entry.get_matrix():
+        inputs.append(entry)
     print(inputs)
     button.destroy()
+    return inputs
 
 def print_matrix():
     matrix = matrix_entry.get_matrix()

@@ -68,16 +68,17 @@ K = np.zeros([array_size, array_size])
 boundary_nodes = get_boundary_nodes(mesh_coords,width,height)
 
 
-boundary_conditions = [BoundaryCondition(1,"Dirichlet"),BoundaryCondition(2,"Dirichlet"),BoundaryCondition(3,"Dirichlet"),BoundaryCondition(4,"Dirichlet")]
-K = apply_boundary_conditions(K,
-boundary_conditions
-,boundary_nodes,width,height)
+
 
 # apply_boundary_conditions()
 K = assembling_algorithm(finite_elements, 4, K)
 
+values = np.zeros([array_size])
 
-
+#boundary_conditions = [BoundaryCondition(1,"Dirichlet"),BoundaryCondition(2,"Dirichlet"),BoundaryCondition(3,"Dirichlet"),BoundaryCondition(4,"Dirichlet")]
+K,values = apply_boundary_conditions(K,values,
+boundary_conditions
+,boundary_nodes,width,height)
 
 
 
@@ -98,8 +99,8 @@ K = assembling_algorithm(finite_elements, 4, K)
 # print("-------------------")
 # print(boundary_nodes)
 
-# array containing the solutions in each node
-values = np.zeros([array_size])
+
+
 
 # Write values to a .csv file
 filename = 'program_output.csv'

@@ -27,21 +27,21 @@ def get_boundary_nodes(mesh_coords,width,height):
     boundary_nodes = (left_nodes,top_nodes,right_nodes,bottom_nodes)
     return np.array(boundary_nodes)
 
-def apply_boundary_conditions(system_matrix, boundary_conditions, boundary_nodes,width,height):
+def apply_boundary_conditions(system_matrix, rhs,boundary_conditions, boundary_nodes,width,height):
     for side, b_nodes in zip(boundary_conditions, boundary_nodes):
         for node in b_nodes:
-            node_index = find_global_node_nr(node,width,height)
+            node_index = find_global_node_nr(node,width,height) -1
             bc_value = side.value
             if side.bc_type == "Dirichlet":
-                system_matrix[node_index-1, :] = 0
-                system_matrix[:, node_index-1] = 0
-                system_matrix[node_index-1, node_index-1] = 1
-                #TODO: Change rightside accordingly
+                system_matrix[node_index, :] = 0
+                system_matrix[:, node_index] = 0
+                system_matrix[node_index, node_index] = 1
+                rhs[node_index] = bc_value
             elif side.bc_type == "Neumann":
-                raise NotImplementedError() 
+                rhs[node_index] += bc_value
             else:
                 raise ValueError("Invalid boundary condition type")
-    return system_matrix
+    return system_matrix,rhs
 
 
 def find_global_node_nr(node,width,height):

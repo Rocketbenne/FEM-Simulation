@@ -30,3 +30,4 @@ def element_generation(node_equation_array, dimension):
             element_number += 1
 
     return elements
+

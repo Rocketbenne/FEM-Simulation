@@ -84,7 +84,7 @@ def stiffnessMatrix(order,coords,mat_tensor):
      coords: global coordinates of the Elements
      mat_tensor: material tensor should be 2x2 ?
      :returns
-     Ke: stiffness matrix
+     Ke: stiffness matrix of each element
      """
     xi,weight1 = np.polynomial.legendre.leggauss(order)
     eta, weight2 = np.polynomial.legendre.leggauss(order)
@@ -111,3 +111,40 @@ def stiffnessMatrix(order,coords,mat_tensor):
     return Ke
 
 
+def Na(xi, eta, node):
+    if node == 1:
+        return 0.25 * (1 - xi) * (1 - eta)
+    elif node == 2:
+        return 0.25 * (1 + xi) * (1 - eta)
+    elif node == 3:
+        return 0.25 * (1 + xi) * (1 + eta)
+    elif node == 4:
+        return 0.25 * (1 - xi) * (1 + eta)
+
+    return 0
+
+def rhs(order, glob_coords, rho):
+    xi, weight1 = np.polynomial.legendre.leggauss(order)  #could do it with one but this is clearer
+    eta, weight2 = np.polynomial.legendre.leggauss(order)
+    fe = np.zeros(4)
+    for i in range(order):
+        for j in range(order):
+            J = Jacobian(xi[i],eta[j],glob_coords)
+            #print(J)
+            detJ = np.linalg.det(J)
+
+
+            N = np.array([Na(xi[i], eta[j], 1), Na(xi[i], eta[j], 2), Na(xi[i], eta[j], 3), Na(xi[i], eta[j], 4)])
+            fe += N * rho * detJ * weight1[i] * weight2[j]
+
+
+    return fe
+
+
+#Jacobian(1,1,np.zeros((4,2)))
+matrix = np.array([[1, 2], [4, 5], [7, 8], [9,10]])
+node_coords = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
+mat_tensor = np.array([[1, 2], [4, 5]])
+#print(matrix)
+stiffnessMatrix(4,matrix,mat_tensor)
+rhs(4,node_coords,1)

@@ -1,4 +1,5 @@
 import numpy as np
+from Integration import *
 
 # Knotengleichungsarray / Node-Equation-Array
 # Inputs: amount of nodes in the domain
@@ -58,5 +59,5 @@ def assembling_algorithm(finite_elements, number_of_element_nodes, K):
                     eq2 = EQ(finite_elements, b, e)
                     if(eq2 > 0):
                         # Some funny things
-                        K[eq1, eq2] += 0
+                        K[eq1, eq2] += stiffnessMatrix(4,)
     return K

@@ -58,10 +58,13 @@ array_size = mesh_coords.shape[0]
 
 # creates the array containing the node-equations
 NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
+print(NE_array)
 
 # creates the finite elements of the domain
-finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS)
-
+finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS, height, width)
+for i in finite_elements:
+        print(i.get_global_element_number())
+        print(i.get_global_coords())
 # System-matrix K
 K = np.zeros([array_size, array_size])
 

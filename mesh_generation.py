@@ -53,3 +53,4 @@ def visualize_mesh(mesh_coords, line_coords):
     #plt.legend()   
     plt.show()
     return 0
+

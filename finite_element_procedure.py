@@ -1,6 +1,8 @@
 import numpy as np
 from Integration import *
 
+
+
 # Knotengleichungsarray / Node-Equation-Array
 # Inputs: amount of nodes in the domain
 #         coordinates of the domain 
@@ -50,7 +52,6 @@ def EQ(finite_elements, local_number, element_number):
 #         System-matrix K
 # Output: System-matrix K
 def assembling_algorithm(finite_elements, number_of_element_nodes, K):
-
     for e in range(1, finite_elements.size):
         for a in range(1, number_of_element_nodes):
             eq1 = EQ(finite_elements, a, e)

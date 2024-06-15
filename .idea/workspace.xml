@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="83e2833d-5933-44c0-bb8d-f635dfbe9b5e" name="Changes" comment="some conflicts during merge resolved">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/GUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SystemMatrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/SystemMatrix.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +40,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;SystemMatrix&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/max24/Desktop/NSDE_24&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -89,6 +89,10 @@
       <workItem from="1717155748885" duration="1137000" />
       <workItem from="1717417894497" duration="343000" />
       <workItem from="1717418250648" duration="1669000" />
+      <workItem from="1717492978469" duration="1374000" />
+      <workItem from="1717494593742" duration="892000" />
+      <workItem from="1717841893649" duration="32000" />
+      <workItem from="1718294864236" duration="807000" />
     </task>
     <task id="LOCAL-00001" summary="some conflicts during merge resolved">
       <option name="closed" value="true" />
@@ -133,11 +137,11 @@
     <option name="LAST_COMMIT_MESSAGE" value="some conflicts during merge resolved" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/NSDE_24$SystemMatrix.coverage" NAME="SystemMatrix Coverage Results" MODIFIED="1717333940586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NSDE_24$SystemMatrix.coverage" NAME="SystemMatrix Coverage Results" MODIFIED="1717494253994" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NSDE_24$Test.coverage" NAME="Test Coverage Results" MODIFIED="1716907774473" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/NSDE_24$GUI.coverage" NAME="GUI Coverage Results" MODIFIED="1717419827957" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NSDE_24$GUI.coverage" NAME="GUI Coverage Results" MODIFIED="1717494285164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NSDE_24$Main.coverage" NAME="main Coverage Results" MODIFIED="1717417784625" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/NSDE_24$main.coverage" NAME="main Coverage Results" MODIFIED="1717419630928" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/NSDE_24$main.coverage" NAME="main Coverage Results" MODIFIED="1717494626745" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NSDE_24$MatrixGUI.coverage" NAME="MatrixGUI Coverage Results" MODIFIED="1716907770672" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

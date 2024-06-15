@@ -136,15 +136,12 @@ def rhs(order, glob_coords, rho):
 
             N = np.array([Na(xi[i], eta[j], 1), Na(xi[i], eta[j], 2), Na(xi[i], eta[j], 3), Na(xi[i], eta[j], 4)])
             fe += N * rho * detJ * weight1[i] * weight2[j]
-
-
     return fe
 
 
 #Jacobian(1,1,np.zeros((4,2)))
-matrix = np.array([[1, 2], [4, 5], [7, 8], [9,10]])
-node_coords = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
-mat_tensor = np.array([[1, 2], [4, 5]])
-#print(matrix)
-stiffnessMatrix(4,matrix,mat_tensor)
-rhs(4,node_coords,1)
+#matrix = np.array([[1, 2], [4, 5], [7, 8], [9,10]])
+#node_coords = np.array([[0, 20], [10, 20], [0, 0], [10, 0]])
+#mat_tensor = np.array([[1, 2], [4, 5]])
+#stiffnessMatrix(4,matrix,mat_tensor)
+#print(rhs(4,node_coords,1))

@@ -51,8 +51,9 @@ def EQ(finite_elements, local_number, element_number):
 #         amount of element nodes
 #         System-matrix K
 # Output: System-matrix K
-def assembling_algorithm(finite_elements, number_of_element_nodes, K):
+def assembling_algorithm(finite_elements, number_of_element_nodes, K, material_tensor, order):
     for e in range(1, finite_elements.size):
+        global_coords = finite_elements[e].get_global_coords()
         for a in range(1, number_of_element_nodes):
             eq1 = EQ(finite_elements, a, e)
             if(eq1 > 0):
@@ -60,5 +61,31 @@ def assembling_algorithm(finite_elements, number_of_element_nodes, K):
                     eq2 = EQ(finite_elements, b, e)
                     if(eq2 > 0):
                         # Some funny things
-                        K[eq1, eq2] += 0
+                        K[eq1, eq2] += stiffnessMatrix(order,global_coords,material_tensor)
     return K
+
+# Assembling-Algorithm from the VO
+# Inputs: array of finite-element-objects
+#         amount of element nodes
+#         System-matrix K
+# Output: System-matrix K
+def assembling_algorithm2(finite_elements, number_of_element_nodes, K, Rhs, material_tensor, order, rho):
+    for e in range(finite_elements.size):
+        # Extract the global coordinates for the current element
+        global_coords = finite_elements[e].get_global_coords()
+
+        # Compute the element stiffness matrix
+        element_stiffness_matrix = stiffnessMatrix(order, global_coords, material_tensor)
+        element_force_vector = rhs(order, global_coords, rho)
+
+        for a in range(number_of_element_nodes):
+            eq1 = EQ(finite_elements, a, e)
+            if eq1 > 0:
+                for b in range(number_of_element_nodes):
+                    eq2 = EQ(finite_elements, b, e)
+                    if eq2 > 0:
+                        # Add the appropriate component of the element stiffness matrix to K
+                        K[eq1, eq2] += element_stiffness_matrix[a, b]
+                        Rhs[eq1] += element_force_vector[a]
+    print(Rhs)
+    return K, Rhs

@@ -58,13 +58,9 @@ array_size = mesh_coords.shape[0]
 
 # creates the array containing the node-equations
 NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
-print(NE_array)
 
 # creates the finite elements of the domain
 finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS, height, width)
-for i in finite_elements:
-        print(i.get_global_element_number())
-        print(i.get_global_coords())
 # System-matrix K
 K = np.zeros([array_size, array_size])
 
@@ -74,7 +70,11 @@ boundary_nodes = get_boundary_nodes(mesh_coords,width,height)
 
 
 # apply_boundary_conditions()
-K = assembling_algorithm(finite_elements, 4, K)
+mat_tensor = np.array([[1, 2], [4, 5]])
+order = 4
+rho = 1
+rhs = np.zeros(array_size)
+K, rhs = assembling_algorithm2(finite_elements, 4, K, rhs, mat_tensor, order, rho)
 
 values = np.zeros([array_size])
 

@@ -1,6 +1,8 @@
 #%%
 # First we let the user "input" be done throught putting numbers in the variables
 # Later on we might do it throught the cmd or a pop-up-window
+import numpy as np
+
 
 # used for testing the program, just wirte the values in here
 def getGeometryInputs_hard_coded():
@@ -59,6 +61,18 @@ def getLineInputs(width, height):
     end = (y_start, y_end)
 
     return start, end, value_function
+
+
+def getMaterialTensor():
+    print("First value of the material Tensor: ")
+    value1 = getNumberFromUser()
+    print("Second value of the material Tensor: ")
+    value2 = getNumberFromUser()
+    print("Third value of the material Tensor: ")
+    value3 = getNumberFromUser()
+    print("Fourth value of the material Tensor: ")
+    value4 = getNumberFromUser()
+    return np.array([[value1, value2],[value3, value4]])
 
 def getLineInputs_hard_coded():
     start = (10, 160)

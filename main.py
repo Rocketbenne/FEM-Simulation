@@ -1,4 +1,5 @@
 #%%
+import matplotlib.pyplot as plt
 import numpy as np
 import csv
 
@@ -76,6 +77,7 @@ rho = 1
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm2(finite_elements, 4, K, rhs, mat_tensor, order, rho)
 
+print(K)
 values = np.zeros([array_size])
 
 #boundary_conditions = [BoundaryCondition(1,"Dirichlet"),BoundaryCondition(2,"Dirichlet"),BoundaryCondition(3,"Dirichlet"),BoundaryCondition(4,"Dirichlet")]

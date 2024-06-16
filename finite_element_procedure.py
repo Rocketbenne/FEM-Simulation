@@ -70,22 +70,22 @@ def assembling_algorithm(finite_elements, number_of_element_nodes, K, material_t
 #         System-matrix K
 # Output: System-matrix K
 def assembling_algorithm2(finite_elements, number_of_element_nodes, K, Rhs, material_tensor, order, rho):
-    for e in range(finite_elements.size):
+    for e in range(1, finite_elements.size):
         # Extract the global coordinates for the current element
         global_coords = finite_elements[e].get_global_coords()
 
         # Compute the element stiffness matrix
         element_stiffness_matrix = stiffnessMatrix(order, global_coords, material_tensor)
+        #Compute the elemnts rhs matrix
         element_force_vector = rhs(order, global_coords, rho)
 
-        for a in range(number_of_element_nodes):
+        for a in range(1, number_of_element_nodes):
             eq1 = EQ(finite_elements, a, e)
             if eq1 > 0:
-                for b in range(number_of_element_nodes):
+                Rhs[eq1 - 1] += element_force_vector[a]
+                for b in range(1, number_of_element_nodes):
                     eq2 = EQ(finite_elements, b, e)
                     if eq2 > 0:
                         # Add the appropriate component of the element stiffness matrix to K
-                        K[eq1, eq2] += element_stiffness_matrix[a, b]
-                        Rhs[eq1] += element_force_vector[a]
-    print(Rhs)
+                        K[eq1 - 1, eq2 - 1] += element_stiffness_matrix[a, b]
     return K, Rhs

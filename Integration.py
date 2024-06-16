@@ -106,8 +106,6 @@ def stiffnessMatrix(order,coords,mat_tensor):
             B = np.array([global_Na, global_Nb])
 
             Ke += (B.T @ mat_tensor @ B) * detJ * weight1[i] * weight2[j]
-
-    #print(Ke)
     return Ke
 
 
@@ -130,9 +128,7 @@ def rhs(order, glob_coords, rho):
     for i in range(order):
         for j in range(order):
             J = Jacobian(xi[i],eta[j],glob_coords)
-            #print(J)
             detJ = np.linalg.det(J)
-
 
             N = np.array([Na(xi[i], eta[j], 1), Na(xi[i], eta[j], 2), Na(xi[i], eta[j], 3), Na(xi[i], eta[j], 4)])
             fe += N * rho * detJ * weight1[i] * weight2[j]

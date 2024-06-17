@@ -70,7 +70,7 @@ def assembling_algorithm(finite_elements, number_of_element_nodes, K, material_t
 #         System-matrix K
 # Output: System-matrix K
 def assembling_algorithm2(finite_elements, number_of_element_nodes, K, Rhs, material_tensor, order, rho):
-    for e in range(1, finite_elements.size):
+    for e in range(finite_elements.size):
         # Extract the global coordinates for the current element
         global_coords = finite_elements[e].get_global_coords()
 

@@ -81,15 +81,13 @@ print(K)
 values = np.zeros([array_size])
 
 #boundary_conditions = [BoundaryCondition(1,"Dirichlet"),BoundaryCondition(2,"Dirichlet"),BoundaryCondition(3,"Dirichlet"),BoundaryCondition(4,"Dirichlet")]
-K,values = apply_boundary_conditions(K,values,
-boundary_conditions
-,boundary_nodes,width,height)
+#K,values = apply_boundary_conditions(K,values, boundary_conditions, boundary_nodes,width,height)
 
 
 
 
 # Testing
-# visualize_mesh(mesh_coords, line_coords)
+visualize_mesh(mesh_coords, line_coords)
 
 #print(NE_array)
 

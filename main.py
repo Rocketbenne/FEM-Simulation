@@ -80,15 +80,15 @@ K, rhs = assembling_algorithm2(finite_elements, 4, K, rhs, mat_tensor, order, rh
 print(K)
 values = np.zeros([array_size])
 
-#boundary_conditions = [BoundaryCondition(1,"Dirichlet"),BoundaryCondition(2,"Dirichlet"),BoundaryCondition(3,"Dirichlet"),BoundaryCondition(4,"Dirichlet")]
-#K,values = apply_boundary_conditions(K,values, boundary_conditions, boundary_nodes,width,height)
+boundary_conditions = [BoundaryCondition(1,"Dirichlet"),BoundaryCondition(2,"Dirichlet"),BoundaryCondition(3,"Dirichlet"),BoundaryCondition(4,"Dirichlet")]
+K,rhs = apply_boundary_conditions(K,rhs, boundary_conditions, boundary_nodes,width,height)
 
 
 
 
 # Testing
 visualize_mesh(mesh_coords, line_coords)
-
+np.linalg.solve(K,rhs)
 #print(NE_array)
 
 # print('--------------------------------------')

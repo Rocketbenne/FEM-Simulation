@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
+from enum import  Enum
 
 from input_handling import *
 from mesh_generation import *
@@ -34,9 +35,7 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
     Number in the Middle: Global Element Number
 
 '''
-
-
-
+boundary_conditions = [[Type.Dirichlet.value, 1],[Type.Dirichlet.value, 2],[Type.Dirichlet.value, 3],[Type.Dirichlet.value, 4],[Type.Dirichlet.value, 5]]
 
 
 #%%
@@ -61,7 +60,7 @@ array_size = mesh_coords.shape[0]
 NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
 
 # creates the finite elements of the domain
-finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS, height, width)
+finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS, height, width, boundary_conditions)
 # System-matrix K
 K = np.zeros([array_size, array_size])
 
@@ -71,16 +70,18 @@ boundary_nodes = get_boundary_nodes(mesh_coords,width,height)
 
 
 # apply_boundary_conditions()
-mat_tensor = np.array([[1, 2], [4, 5]])
+mat_tensor = np.array([[1, 1], [1, 1]])
 order = 4
 rho = 1
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm2(finite_elements, 4, K, rhs, mat_tensor, order, rho)
 
-print(K)
+#Resize the Arrays to the size we need them by cutting away the 0 entries
+K = K[:array_size-line_values.size - 36, :array_size-line_values.size -36]
+rhs = rhs[:array_size-line_values.size -36]
+
 values = np.zeros([array_size])
 
-#boundary_conditions = [BoundaryCondition(1,"Dirichlet"),BoundaryCondition(2,"Dirichlet"),BoundaryCondition(3,"Dirichlet"),BoundaryCondition(4,"Dirichlet")]
 #K,values = apply_boundary_conditions(K,values, boundary_conditions, boundary_nodes,width,height)
 
 

@@ -19,7 +19,7 @@ def get_boundary_nodes(mesh_coords,width,height):
     x_values = mesh_coords[:, 0]  # Extract all x-coordinates
     y_values = mesh_coords[:, 1]  # Extract all y-coordinates
 
-    left_nodes = mesh_coords[(x_values == 0)  & (y_values != height), :]  
+    left_nodes = mesh_coords[(x_values == 0) & (y_values != height), :]
     right_nodes = mesh_coords[(x_values == width) & (y_values != 0), :]  
     top_nodes = mesh_coords[(x_values != width) & (y_values == height), :]  
     bottom_nodes = mesh_coords[(x_values != 0) & (y_values == 0), :]  

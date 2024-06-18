@@ -81,4 +81,7 @@ def getLineInputs_hard_coded():
 
     return start, end, value_function
 
+def get_hardcoded_RB():
+    re
+
 

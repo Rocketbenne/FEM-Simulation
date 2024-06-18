@@ -2,7 +2,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
-from enum import  Enum
 
 from input_handling import *
 from mesh_generation import *
@@ -89,7 +88,7 @@ values = np.zeros([array_size])
 
 # Testing
 visualize_mesh(mesh_coords, line_coords)
-
+np.linalg.solve(K,rhs)
 #print(NE_array)
 
 # print('--------------------------------------')

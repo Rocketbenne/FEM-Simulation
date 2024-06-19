@@ -79,6 +79,8 @@ def getLineValues(line_coords, function):
 #         Value for y
 # Output: Value of the Function
 def evaluate_function(function, x, y):
+    if(function.isnumeric()):
+        return int(function)
     try:
         result = eval(function.format(x=x, y=y), {'__builtins__': None}, {'sin': math.sin, 'cos': math.cos, 'tan': math.tan, 'pi': math.pi, 'e': math.e, 'sqrt': math.sqrt})
         return result

@@ -75,13 +75,17 @@ def getMaterialTensor():
     return np.array([[value1, value2],[value3, value4]])
 
 def getLineInputs_hard_coded():
-    start = (10, 160)
-    end = (57, 100)
-    value_function = "{x}+{y}"
+    start = (50, 180)
+    end = (51, 0)
+    value_function = "0"
+
+    #start = (10, 160)
+    #end = (57, 100)
+    #value_function = "{x}+{y}"
 
     return start, end, value_function
 
-def get_hardcoded_RB():
-    re
+#def get_hardcoded_RB():
+#    re
 
 

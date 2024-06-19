@@ -9,6 +9,7 @@ from finite_element import *
 from finite_element_procedure import *
 from line import *
 from boundary_condition import *
+from exportRes import *
 
 #%%
 
@@ -34,7 +35,7 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
     Number in the Middle: Global Element Number
 
 '''
-boundary_conditions = [[Type.Dirichlet.value, 1],[Type.Dirichlet.value, 2],[Type.Dirichlet.value, 3],[Type.Dirichlet.value, 4],[Type.Dirichlet.value, 5]]
+boundary_conditions = [[Type.Dirichlet.value, 0],[Type.Dirichlet.value, 10],[Type.Dirichlet.value, 10],[Type.Dirichlet.value, 0],[Type.Dirichlet.value, 0]]
 
 
 #%%
@@ -50,7 +51,7 @@ mesh_coords = createMesh(width, height)
 line_coords = getLineCoordinates(line_start, line_end, mesh_coords)
 # TODO: if for this line_coords, so that it is choosable to have a line or not
 
-line_values = getLineValues(line_coords, "{x}+{y}")
+line_values = getLineValues(line_coords, line_value_function)
 
 # gets amount of coordinate pairs
 array_size = mesh_coords.shape[0]
@@ -76,8 +77,13 @@ rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm2(finite_elements, 4, K, rhs, mat_tensor, order, rho)
 
 #Resize the Arrays to the size we need them by cutting away the 0 entries
-K = K[:array_size-line_values.size - 36, :array_size-line_values.size -36]
-rhs = rhs[:array_size-line_values.size -36]
+
+with open('matrix.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerows(K)
+
+#K = K[:array_size-line_values.size - 36, :array_size-line_values.size -36]
+#rhs = rhs[:array_size-line_values.size -36]
 
 values = np.zeros([array_size])
 
@@ -87,8 +93,37 @@ values = np.zeros([array_size])
 
 
 # Testing
-visualize_mesh(mesh_coords, line_coords)
-np.linalg.solve(K,rhs)
+#visualize_mesh(mesh_coords, line_coords)
+print("det: ", np.linalg.det(K))
+
+try:
+    u = np.linalg.lstsq(K, rhs, rcond=None)
+    print(u[0])
+except np.linalg.LinAlgError as e:
+    print(f"Error: {e}")
+
+
+global_node_numbers_list = []
+for element in finite_elements:
+    global_node_numbers_list.append(element.get_global_node_numbers())
+global_node_numbers_array = np.array(global_node_numbers_list)
+
+print(len(finite_elements))
+print(array_size)
+print(len(rhs)) # muas 100 sein, nit 56
+print(len(global_node_numbers_array))
+
+export_writer = EXPORT(4,                       # Nodes per Element
+                       len(finite_elements),    # Amount of Elements
+                       array_size,              # Amount of Nodes
+                       2,                       # Dimension (2D)
+                       u[0],                       # Result Vector
+                       mesh_coords,             # Node Coordinates
+                       global_node_numbers_array, # Global node numbers of each element
+                       1)                       # Degree of Freedom per Node
+
+export_writer.writeResults()
+
 #print(NE_array)
 
 # print('--------------------------------------')
@@ -114,7 +149,7 @@ fields = ['coordinates', 'value']
 writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
 writer.writeheader()
 
-for i, value in enumerate(values):
-        writer.writerow({'coordinates': mesh_coords[i], 'value': values[i]})
+for i, value in enumerate(u[0]):
+        writer.writerow({'coordinates': mesh_coords[i], 'value': u[0][i]})
 
 # %%

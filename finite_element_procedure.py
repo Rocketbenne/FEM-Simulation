@@ -46,7 +46,9 @@ def get_node_equation_array(array_size, mesh_coords, line_coords = []):
 #         element number
 # Output: global equation number
 def EQ(finite_elements, local_number, element_number):
-    return finite_elements[element_number - 1].get_global_node_numbers()[local_number - 1]
+    #if(element_number < 5):
+    #    print(finite_elements[element_number - 1].get_global_node_numbers())
+    return finite_elements[element_number].get_global_node_numbers()[local_number - 1]
 
 
 # Assembling-Algorithm from the VO
@@ -74,18 +76,20 @@ def assembling_algorithm(finite_elements, number_of_element_nodes, K, material_t
 # Output: System-matrix K
 def assembling_algorithm2(finite_elements, number_of_element_nodes, K, Rhs, material_tensor, order, rho):
     for e in range(finite_elements.size):
+        #print(e) # TODO e fong mit 0 un, ban ersten mol würde es es finite-element[-1] hernemmen, check nit wieso kuan error kimmp, honn gefixed?
         # Extract the global coordinates for the current element
         global_coords = finite_elements[e].get_global_coords()
 
-        # Compute the element stiffness matrix
-        element_stiffness_matrix = stiffnessMatrix(order, global_coords, material_tensor)
-        #Compute the elemnts rhs matrix
+        # Compute the elements stiffness matrix
+        element_stiffness_matrix = stiffnessMatrix(order, global_coords, material_tensor) #TODO schaug noch legit values aus
+        # Compute the elements rhs matrix
         element_force_vector = rhs(order, global_coords, rho)
+        #print(element_force_vector) #TODO hot ollm in gleichen wert ???
 
         for a in range(1, number_of_element_nodes):
             eq1 = EQ(finite_elements, a, e)
             if eq1 > 0:
-                Rhs[eq1 - 1] += element_force_vector[a]
+                Rhs[eq1 - 1] += element_force_vector[a] #TODO nu schaugen
                 for b in range(1, number_of_element_nodes):
                     eq2 = EQ(finite_elements, b, e)
                     if eq2 > 0:

@@ -76,7 +76,7 @@ def getMaterialTensor():
 
 def getLineInputs_hard_coded():
     start = (50, 180)
-    end = (51, 0)
+    end = (50, 0)
     value_function = "0"
 
     #start = (10, 160)

@@ -35,7 +35,7 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
     Number in the Middle: Global Element Number
 
 '''
-boundary_conditions = [[Type.Dirichlet.value, 0],[Type.Dirichlet.value, 10],[Type.Dirichlet.value, 10],[Type.Dirichlet.value, 0],[Type.Dirichlet.value, 0]]
+boundary_conditions = [[Type.Dirichlet.value, 1],[Type.Dirichlet.value, 2],[Type.Dirichlet.value, 3],[Type.Dirichlet.value, 4],[Type.Dirichlet.value, 0]]
 
 
 #%%
@@ -47,14 +47,17 @@ line_start, line_end, line_value_function = getLineInputs_hard_coded()
 # creates the mesh with all the nodes
 mesh_coords = createMesh(width, height)
 
-# get the coordinates of the Line
-line_coords = getLineCoordinates(line_start, line_end, mesh_coords)
-# TODO: if for this line_coords, so that it is choosable to have a line or not
-
-line_values = getLineValues(line_coords, line_value_function)
-
 # gets amount of coordinate pairs
 array_size = mesh_coords.shape[0]
+
+# get the coordinates of the Line
+line_coords = []
+#line_coords = getLineCoordinates(line_start, line_end, mesh_coords)
+# TODO: if for this line_coords, so that it is choosable to have a line or not
+
+if line_coords:  # checks if list is not empty
+    line_values = getLineValues(line_coords, line_value_function)
+
 
 # creates the array containing the node-equations
 NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
@@ -66,6 +69,11 @@ K = np.zeros([array_size, array_size])
 
 boundary_nodes = get_boundary_nodes(mesh_coords,width,height)
 
+#for element in finite_elements:
+#     print(element.get_global_element_number())
+#     print(element.get_global_node_numbers())
+#     print(element.get_boundaries())
+     #print(element.get_global_coords())
 
 
 
@@ -75,6 +83,7 @@ order = 4
 rho = 1
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm2(finite_elements, 4, K, rhs, mat_tensor, order, rho)
+#rhs = np.zeros(array_size)
 
 #Resize the Arrays to the size we need them by cutting away the 0 entries
 
@@ -84,42 +93,64 @@ with open('matrix.csv', mode='w', newline='') as file:
 
 #K = K[:array_size-line_values.size - 36, :array_size-line_values.size -36]
 #rhs = rhs[:array_size-line_values.size -36]
+K = K[:array_size - 36, :array_size - 36]
+rhs = rhs[:array_size - 36]
+
 
 values = np.zeros([array_size])
 
-#K,values = apply_boundary_conditions(K,values, boundary_conditions, boundary_nodes,width,height)
+
+u = np.linalg.solve(K, rhs)
 
 
+#global_node_numbers_list = []
+#for element in finite_elements:
 
+    #new_order = np.array([element.get_global_node_numbers()[3], element.get_global_node_numbers()[2], element.get_global_node_numbers()[0], element.get_global_node_numbers()[1]])
+#    new_order = np.array([element.get_global_coords()[2], element.get_global_coords()[3], element.get_global_coords()[0], element.get_global_coords()[1]])
+#    global_node_numbers_list.append(new_order)
+    #print(element.get_global_node_numbers())
+    #print(new_order)
+    #print("--")
+#global_node_numbers_array = np.array(global_node_numbers_list)
+#print(global_node_numbers_array)
 
-# Testing
-#visualize_mesh(mesh_coords, line_coords)
-print("det: ", np.linalg.det(K))
-
-try:
-    u = np.linalg.lstsq(K, rhs, rcond=None)
-    print(u[0])
-except np.linalg.LinAlgError as e:
-    print(f"Error: {e}")
-
-
+# versuach: fa jeden element die 4 knotennummern ungeben, wobei die knoten fa 0 bis 100 gian
 global_node_numbers_list = []
-for element in finite_elements:
-    global_node_numbers_list.append(element.get_global_node_numbers())
+for j in range(0, 9):
+     for i in range(0, 9):
+          arr = np.array([NODE_AMOUNT_PER_AXIS *(j+1) + i, NODE_AMOUNT_PER_AXIS*(j+1) + (i+1), NODE_AMOUNT_PER_AXIS *(j) + i, NODE_AMOUNT_PER_AXIS *(j) + (i+1)])
+          global_node_numbers_list.append(arr)
+        
 global_node_numbers_array = np.array(global_node_numbers_list)
 
-print(len(finite_elements))
-print(array_size)
-print(len(rhs)) # muas 100 sein, nit 56
-print(len(global_node_numbers_array))
+
+
+counter = 0
+out = []
+for i in range(9):
+    out.append(boundary_conditions[0][1])
+for i in range(8):
+     out.append(boundary_conditions[1][1])
+     out.append(boundary_conditions[3][1])
+     for j in range(8):
+        out.append(u[counter]) 
+        counter += 1
+out.append(boundary_conditions[1][1])
+out.append(boundary_conditions[3][1])
+for i in range(9):
+    out.append(boundary_conditions[2][1])
+
+out = np.array(out)
+
 
 export_writer = EXPORT(4,                       # Nodes per Element
                        len(finite_elements),    # Amount of Elements
                        array_size,              # Amount of Nodes
                        2,                       # Dimension (2D)
-                       u[0],                       # Result Vector
+                       out,                     # Result Vector
                        mesh_coords,             # Node Coordinates
-                       global_node_numbers_array, # Global node numbers of each element
+                       global_node_numbers_array, # global knot number of each element
                        1)                       # Degree of Freedom per Node
 
 export_writer.writeResults()
@@ -149,7 +180,7 @@ fields = ['coordinates', 'value']
 writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
 writer.writeheader()
 
-for i, value in enumerate(u[0]):
-        writer.writerow({'coordinates': mesh_coords[i], 'value': u[0][i]})
+for i, value in enumerate(u):
+        writer.writerow({'coordinates': mesh_coords[i], 'value': u<[i]})
 
 # %%

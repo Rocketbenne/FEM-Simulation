@@ -23,7 +23,7 @@ def gauss2(n, m, func, lower_boundaryX, upper_boundaryX, lower_boundaryY, upper_
     n: number of points
     m: number of points
     func: function
-    lower_boundaryX, upper_boundaryX : boundaries for the integral that integrates x        0,1
+    lower_boundaryX, upper_boundaryX : boundaries for the integral that integrates x        0,1 #TODo war glabi (-1, 1) obr wert jo eh nit benutzt :)
     lower_boundaryY, upper_boundaryY : boundaries for the integral that integrates y        0,1
     :returns
     value: the numerical value of the double integral
@@ -51,8 +51,9 @@ def dNi_(xi, eta):
         :returns
         J: Jacobian matrix
     """
-    dNi_deta = np.array([-0.25 * (1 - xi), -0.25 * (1 + xi), 0.25 * (1 + xi), 0.25 * (1 - xi)])
-    dNi_dxi = np.array([-0.25 * (1 - eta), 0.25 * (1 - eta), 0.25 * (1 + eta), -0.25 * (1 + eta)])
+    # TODO sein do die zeilen vertauscht ??? weil ba deta sein lei xi in dr formel
+    dNi_dxi = np.array([-0.25 * (1 - xi), -0.25 * (1 + xi), 0.25 * (1 + xi), 0.25 * (1 - xi)])
+    dNi_deta = np.array([-0.25 * (1 - eta), 0.25 * (1 - eta), 0.25 * (1 + eta), -0.25 * (1 + eta)])
     return dNi_dxi, dNi_deta
 
 
@@ -64,6 +65,7 @@ def Jacobian(xi, eta , glob_coords):
        :returns
        J: Jacobian matrix
     """
+    #print(glob_coords)
     dNi_dxi, dNi_deta = dNi_(xi, eta)
     J = np.zeros((2, 2))
     J[0, 0] = dNi_dxi[0]*glob_coords[0][0] + dNi_dxi[1]*glob_coords[1][0] + dNi_dxi[2]*glob_coords[2][0] + dNi_dxi[3]*glob_coords[3][0]
@@ -71,7 +73,18 @@ def Jacobian(xi, eta , glob_coords):
     J[1, 0] = dNi_deta[0]*glob_coords[0][0] + dNi_deta[1]*glob_coords[1][0] + dNi_deta[2]*glob_coords[2][0] + dNi_deta[3]*glob_coords[3][0]
     J[1, 1] = dNi_deta[0] * glob_coords[0][1] + dNi_deta[1] * glob_coords[1][1] + dNi_deta[2] * glob_coords[2][1] + dNi_deta[3] * glob_coords[3][1]
 
+    #J[0, 0] = - glob_coords[0][0] / 2 + glob_coords[1][0] / 2
+    #J[1, 1] = - glob_coords[0][1] / 2 + glob_coords[2][1] / 2
+
+    J_2 = np.zeros((2, 2))  # TODO: uanzigste unterschied isch dass element (0,1) und (1,0) getauscht sein
+    J_2[0, 0] = -0.25*(1-eta)*glob_coords[0][0] + 0.25  *(1-eta)*glob_coords[1][0] + 0.25  *(1+eta)*glob_coords[2][0] - 0.25  *(1+eta)*glob_coords[3][0]
+    J_2[0, 1] = -0.25*(1-xi)*glob_coords[0][0] - 0.25  *(1+xi)*glob_coords[1][0] + 0.25  *(1+xi)*glob_coords[2][0] + 0.25  *(1-xi)*glob_coords[3][0]
+    J_2[1, 0] = -0.25*(1-eta)*glob_coords[0][1] + 0.25  *(1-eta)*glob_coords[1][1] + 0.25  *(1+eta)*glob_coords[2][1] - 0.25  *(1+eta)*glob_coords[3][1]
+    J_2[1, 1] = -0.25*(1-xi)*glob_coords[0][1] - 0.25  *(1+xi)*glob_coords[1][1] + 0.25  *(1+xi)*glob_coords[2][1] + 0.25  *(1-xi)*glob_coords[3][1]
+
     #print(J)
+    #print(J_2)
+    #print("--")
 
     return J
 
@@ -92,7 +105,6 @@ def stiffnessMatrix(order,coords,mat_tensor):
     for i in range(order):
         for j in range(order):
             J = Jacobian(xi[i],eta[j],coords)
-            #print(J)
             detJ = np.linalg.det(J)
             invJ = np.linalg.inv(J)
 

@@ -83,6 +83,7 @@ def assembling_algorithm2(finite_elements, number_of_element_nodes, K, Rhs, mate
         # Compute the elements stiffness matrix
         element_stiffness_matrix = stiffnessMatrix(order, global_coords, material_tensor) #TODO schaug noch legit values aus
         # Compute the elements rhs matrix
+        #print(element_stiffness_matrix)
         element_force_vector = rhs(order, global_coords, rho)
         #print(element_force_vector) #TODO hot ollm in gleichen wert ???
 

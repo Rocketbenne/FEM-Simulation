@@ -35,7 +35,7 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
     Number in the Middle: Global Element Number
 
 '''
-boundary_conditions = [[Type.Dirichlet.value, 1],[Type.Dirichlet.value, 2],[Type.Dirichlet.value, 3],[Type.Dirichlet.value, 4],[Type.Dirichlet.value, 0]]
+boundary_conditions = [[Type.Dirichlet.value, 0],[Type.Dirichlet.value, 10],[Type.Dirichlet.value, 0],[Type.Dirichlet.value, -10],[Type.Dirichlet.value, 0]]
 
 
 #%%

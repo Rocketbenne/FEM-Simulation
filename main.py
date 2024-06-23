@@ -35,7 +35,7 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
     Number in the Middle: Global Element Number
 
 '''
-boundary_conditions = [[Type.Dirichlet.value, 0],[Type.Dirichlet.value, 10],[Type.Dirichlet.value, 0],[Type.Dirichlet.value, -10],[Type.Dirichlet.value, 0]]
+
 
 
 #%%
@@ -43,6 +43,12 @@ boundary_conditions = [[Type.Dirichlet.value, 0],[Type.Dirichlet.value, 10],[Typ
 width, height, order_num_int = getGeometryInputs_hard_coded()
 
 line_start, line_end, line_value_function = getLineInputs_hard_coded()
+
+boundary_conditions_ = getBCInputs()
+
+boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
+[boundary_conditions_[1][0],boundary_conditions_[1][1]],[boundary_conditions_[2][0],boundary_conditions_[2][1]],
+[boundary_conditions_[3][0],boundary_conditions_[3][1]],[Type.Dirichlet.value, 0]]
 
 # creates the mesh with all the nodes
 mesh_coords = createMesh(width, height)

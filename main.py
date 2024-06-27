@@ -41,11 +41,11 @@ rho = 1
 
 width, height, order_num_int = getGeometryInputs_hard_coded()
 
-#line_start, line_end, line_value_function = getLineInputs(width, height)
+line_start, line_end, line_value_function = getLineInputs(width, height)
 
 #mat_tensor = getMaterialTensor()
 
-#boundary_conditions_ = getBCInputs()
+boundary_conditions_ = getBCInputs()
 
 """boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
 [boundary_conditions_[1][0],boundary_conditions_[1][1]],[boundary_conditions_[2][0],boundary_conditions_[2][1]],

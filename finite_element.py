@@ -40,7 +40,7 @@ def element_generation(node_equation_array, dimension, height, width, boundary_c
                                      [delta_x*((element_number - 1) % (dimension-1)) + delta_x, height - y * delta_y],
                                      [delta_x*((element_number - 1) % (dimension-1)), height - y * delta_y - delta_y],
                                      [delta_x*((element_number - 1) % (dimension-1)) + delta_x, height - y * delta_y - delta_y]])
-
+            print(global_coords)
             """global_coords = np.array([[delta_x * ((element_number - 1) % (dimension - 1)), height - y * delta_y - delta_y],
                                     [delta_x * ((element_number - 1) % (dimension - 1)) + delta_x, height - y * delta_y - delta_y],
                                     [delta_x * ((element_number - 1) % (dimension - 1)), height - y * delta_y],

@@ -40,27 +40,6 @@ def element_generation(node_equation_array, dimension, height, width, boundary_c
                                      [delta_x*((element_number - 1) % (dimension-1)) + delta_x, height - y * delta_y],
                                      [delta_x*((element_number - 1) % (dimension-1)), height - y * delta_y - delta_y],
                                      [delta_x*((element_number - 1) % (dimension-1)) + delta_x, height - y * delta_y - delta_y]])
-            #print("Element Number: ", element_number)
-            #print("gloabel coord:", global_coords)  # TODO do isch a print fir die globalen coords fa jeden element
-            '''
-            boundaries = np.zeros([4, 2])
-            for i in range(4):
-                if node_numbers[i] == 0:
-                    #The corner values are set by the left or right boundary conditon from the recatangle
-                    if global_coords[i][0] == 0:
-                        boundaries[i] = [boundary_conditions[3][0], boundary_conditions[3][1]]
-                    elif global_coords[i][0] == width:
-                        boundaries[i] = [boundary_conditions[1][0], boundary_conditions[1][1]]
-                    elif global_coords[i][1] == 0:
-                        boundaries[i] = [boundary_conditions[2][0], boundary_conditions[2][1]]
-                    elif global_coords[i][1] == height:
-                        boundaries[i] = [boundary_conditions[0][0], boundary_conditions[0][1]]
-                    else:
-                        boundaries[i] = [boundary_conditions[4][0], boundary_conditions[4][1]]
-            elements[element_number - 1] = FEM_Element(element_number, node_numbers, global_coords, boundaries)
-            element_number += 1
-            '''
-
             
             '''
             # Anordnung Globale Koordinaten
@@ -107,8 +86,6 @@ def element_generation(node_equation_array, dimension, height, width, boundary_c
                         boundaries[i] = [boundary_conditions[4][0], boundary_conditions[4][1]]
             elements[element_number - 1] = FEM_Element(element_number, node_numbers, global_coords, boundaries)
             element_number += 1
-
-                    #if global_coords[i]
 
     return elements
 

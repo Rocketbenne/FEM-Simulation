@@ -39,8 +39,8 @@ def getLineCoordinates(start, end, mesh_coords):
     # get rid of duplicates
     values = list(set(values))
 
-    return values
-
+    #return values
+    return []
 
 # Generates the value of the given function and the given coordinates
 # The Function needs to have the variables x and y in curved brackets

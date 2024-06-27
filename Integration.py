@@ -54,7 +54,7 @@ def stiffnessMatrix(order,coords,mat_tensor):
 
                 global_Na = np.zeros(4)
                 global_Nb = np.zeros(4)
-                dN_dxi, dN_deta = dNi_(xi[i], eta[j])
+                dN_dxi, dN_deta = dNi_(xi, eta)
                 for k in range(4):
                     global_Na[k] = invJ[0, 0] * dN_dxi[k] + invJ[0, 1] * dN_deta[k]
                     global_Nb[k] = invJ[1, 0] * dN_dxi[k] + invJ[1, 1] * dN_deta[k]

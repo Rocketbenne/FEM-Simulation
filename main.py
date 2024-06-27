@@ -50,9 +50,9 @@ mat_tensor = getMaterialTensor_hard_coded()
 
 boundary_conditions_ = getBCInputs_hard_coded()
 
-boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
-[boundary_conditions_[1][0],boundary_conditions_[1][1]],[boundary_conditions_[2][0],boundary_conditions_[2][1]],
-[boundary_conditions_[3][0],boundary_conditions_[3][1]],[Type.Dirichlet.value, 0]]
+#boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
+#[boundary_conditions_[1][0],boundary_conditions_[1][1]],[boundary_conditions_[2][0],boundary_conditions_[2][1]],
+#[boundary_conditions_[3][0],boundary_conditions_[3][1]],[Type.Dirichlet.value, 0]]
 
 
 
@@ -75,19 +75,14 @@ if line_coords:  # checks if list is not empty
 NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
 
 # creates the finite elements of the domain
-finite_elements = element_generation(NE_array, amount_of_nodes_per_axis, height, width)
+finite_elements = element_generation(NE_array, amount_of_nodes_per_axis, height, width, amount_of_nodes_per_axis)
 # System-matrix K
 
 K = np.zeros([array_size, array_size])
 
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
-K, rhs = bc.apply_boundary_conditions(K,rhs,[bc.BoundaryCondition(1,"Dirichlet"),bc.BoundaryCondition(2,"Dirichlet"),bc.BoundaryCondition(3,"Dirichlet"),bc.BoundaryCondition(4,"Dirichlet")],bc.get_boundary_nodes(mesh_coords,width,height),width,height)
-
-
-with open('matrix.csv', mode='w', newline='') as file:
-    writer = csv.writer(file)
-    writer.writerows(K)
+K, rhs = bc.apply_boundary_conditions(K,rhs,[bc.BoundaryCondition(1,"Dirichlet"),bc.BoundaryCondition(2,"Dirichlet"),bc.BoundaryCondition(3,"Dirichlet"),bc.BoundaryCondition(4,"Dirichlet")],bc.get_boundary_nodes(mesh_coords,width,height),width,height, amount_of_nodes_per_axis)
 
 
 u = np.linalg.solve(K, rhs)
@@ -96,17 +91,17 @@ u = np.linalg.solve(K, rhs)
 counter = 0
 out = []
 for i in range(9):
-    out.append(boundary_conditions[0][1])
+    out.append(boundary_conditions_[0][1])
 for i in range(8):
-     out.append(boundary_conditions[1][1])
-     out.append(boundary_conditions[3][1])
+     out.append(boundary_conditions_[1][1])
+     out.append(boundary_conditions_[3][1])
      for j in range(8):
         out.append(u[counter]) 
         counter += 1
-out.append(boundary_conditions[1][1])
-out.append(boundary_conditions[3][1])
+out.append(boundary_conditions_[1][1])
+out.append(boundary_conditions_[3][1])
 for i in range(9):
-    out.append(boundary_conditions[2][1])
+    out.append(boundary_conditions_[2][1])
 
 out = np.array(out)
 

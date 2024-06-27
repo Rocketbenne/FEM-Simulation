@@ -22,7 +22,7 @@ class FEM_Element:
 # Inputs: Array containing the the node equation numbers
 #         amount of nodes per axis
 # Output: Array containing the finite Elements
-def element_generation(node_equation_array, dimension, height, width):
+def element_generation(node_equation_array, dimension, height, width, amount_of_nodes_per_axis):
     elements = np.empty((dimension - 1)**2, dtype=FEM_Element)
 
     delta_x = width / (dimension - 1)
@@ -31,10 +31,10 @@ def element_generation(node_equation_array, dimension, height, width):
     element_number = 1
     for y in range(dimension - 1):
         for x in range(dimension - 1):
-            node_numbers = np.array([[bc.find_global_node_nr([x*delta_x,height - y*delta_y],width,height)],
-                                    [bc.find_global_node_nr([(x+1)*delta_x,height - y*delta_y],width,height)],
-                                    [bc.find_global_node_nr([(x+1)*delta_x,height - (y+1)*delta_y],width,height)],
-                                    [bc.find_global_node_nr([x*delta_x,height - (y+1)*delta_y],width,height)]])
+            node_numbers = np.array([[bc.find_global_node_nr([x*delta_x,height - y*delta_y],width,height, amount_of_nodes_per_axis)],
+                                    [bc.find_global_node_nr([(x+1)*delta_x,height - y*delta_y],width,height, amount_of_nodes_per_axis)],
+                                    [bc.find_global_node_nr([(x+1)*delta_x,height - (y+1)*delta_y],width,height, amount_of_nodes_per_axis)],
+                                    [bc.find_global_node_nr([x*delta_x,height - (y+1)*delta_y],width,height, amount_of_nodes_per_axis)]])
 
             global_coords = np.array([[delta_x * ((element_number - 1) % (dimension - 1)), height - y * delta_y - delta_y],
                                     [delta_x * ((element_number - 1) % (dimension - 1)) + delta_x, height - y * delta_y - delta_y],

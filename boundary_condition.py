@@ -27,10 +27,10 @@ def get_boundary_nodes(mesh_coords,width,height):
     boundary_nodes = (left_nodes,top_nodes,right_nodes,bottom_nodes)
     return np.array(boundary_nodes)
 
-def apply_boundary_conditions(system_matrix, rhs,boundary_conditions, boundary_nodes,width,height):
+def apply_boundary_conditions(system_matrix, rhs,boundary_conditions, boundary_nodes,width,height, amount_of_nodes_per_axis):
     for side, b_nodes in zip(boundary_conditions, boundary_nodes):
         for node in b_nodes:
-            node_index = find_global_node_nr(node,width,height) -1
+            node_index = find_global_node_nr(node,width,height, amount_of_nodes_per_axis) -1
             bc_value = side.value
             if side.bc_type == "Dirichlet":
                 system_matrix[node_index, :] = 0
@@ -44,12 +44,12 @@ def apply_boundary_conditions(system_matrix, rhs,boundary_conditions, boundary_n
     return system_matrix,rhs
 
 
-def find_global_node_nr(node,width,height):
-    x_step_size = width/ (mesh_generation.NODE_AMOUNT_PER_AXIS - 1)
-    y_step_size = height/ (mesh_generation.NODE_AMOUNT_PER_AXIS - 1)
+def find_global_node_nr(node,width,height, amount_of_nodes_per_axis):
+    x_step_size = width/ (amount_of_nodes_per_axis - 1)
+    y_step_size = height/ (amount_of_nodes_per_axis - 1)
     a = node[0]
     b = node[1]
     node_in_row = node[0]/x_step_size + 1
-    node_in_col = mesh_generation.NODE_AMOUNT_PER_AXIS - node[1]/y_step_size 
+    node_in_col = amount_of_nodes_per_axis - node[1]/y_step_size 
 
-    return int(node_in_row + (node_in_col-1)*mesh_generation.NODE_AMOUNT_PER_AXIS)
+    return int(node_in_row + (node_in_col-1)*amount_of_nodes_per_axis)

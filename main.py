@@ -82,9 +82,13 @@ K = np.zeros([array_size, array_size])
 
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
+K, rhs = bc.apply_boundary_conditions(K,rhs,[bc.BoundaryCondition(1,"Dirichlet"),bc.BoundaryCondition(2,"Dirichlet"),bc.BoundaryCondition(3,"Dirichlet"),bc.BoundaryCondition(4,"Dirichlet")],bc.get_boundary_nodes(mesh_coords,width,height),width,height)
 
-K = K[:array_size - 36, :array_size - 36]
-rhs = rhs[:array_size - 36]
+
+with open('matrix.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerows(K)
+
 
 u = np.linalg.solve(K, rhs)
 
@@ -140,5 +144,7 @@ writer.writeheader()
 
 for i, value in enumerate(out):
         writer.writerow({'coordinates': mesh_coords[i], 'value': out[i]})
+
+1# %%
 
 # %%

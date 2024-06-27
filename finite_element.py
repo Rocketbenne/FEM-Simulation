@@ -1,4 +1,5 @@
 import numpy as np
+import boundary_condition as bc
 
 class FEM_Element:
     def __init__(self, global_element_number, global_node_numbers, global_cords, boundaries = None):
@@ -6,7 +7,6 @@ class FEM_Element:
         self.global_node_numbers = global_node_numbers
         self.global_cords = global_cords
         self.boundaries = boundaries
-
     def get_global_node_numbers(self):
         return self.global_node_numbers
     
@@ -31,15 +31,27 @@ def element_generation(node_equation_array, dimension, height, width):
     element_number = 1
     for y in range(dimension - 1):
         for x in range(dimension - 1):
-            node_numbers = np.array([node_equation_array[dimension * (y+1) + x], 
-                                        node_equation_array[dimension * (y+1) + (x+1)], 
-                                        node_equation_array[dimension * y + (x+1)], 
-                                        node_equation_array[dimension * y + x]])
+            node_numbers = np.array([[bc.find_global_node_nr([x*delta_x,height - y*delta_y],width,height)],
+                                    [bc.find_global_node_nr([(x+1)*delta_x,height - y*delta_y],width,height)],
+                                    [bc.find_global_node_nr([(x+1)*delta_x,height - (y+1)*delta_y],width,height)],
+                                    [bc.find_global_node_nr([x*delta_x,height - (y+1)*delta_y],width,height)]])
 
             global_coords = np.array([[delta_x * ((element_number - 1) % (dimension - 1)), height - y * delta_y - delta_y],
                                     [delta_x * ((element_number - 1) % (dimension - 1)) + delta_x, height - y * delta_y - delta_y],
                                     [delta_x * ((element_number - 1) % (dimension - 1)) + delta_x, height - y * delta_y],
                                       [delta_x * ((element_number - 1) % (dimension - 1)), height - y * delta_y]])
+
+
+# node_numbers = np.array(bc.find_global_node_nr(,width,height), 
+#                                         node_equation_array[dimension * (y+1) + (x+1)], 
+#                                         node_equation_array[dimension * y + (x+1)], 
+#                                         node_equation_array[dimension * y + x]])
+
+#             global_coords = np.array([[delta_x * ((element_number - 1) % (dimension - 1)), height - y * delta_y - delta_y],
+#                                     [delta_x * ((element_number - 1) % (dimension - 1)) + delta_x, height - y * delta_y - delta_y],
+#                                     [delta_x * ((element_number - 1) % (dimension - 1)) + delta_x, height - y * delta_y],
+#                                       [delta_x * ((element_number - 1) % (dimension - 1)), height - y * delta_y]])
+
 
             elements[element_number - 1] = FEM_Element(element_number, node_numbers, global_coords)
             element_number += 1

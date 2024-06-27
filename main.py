@@ -36,20 +36,22 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
 #%%
 
-order = 4
+
 rho = 1
-
+mat_tensor = [[1,1],[1,1]]
 width, height, order_num_int = getGeometryInputs_hard_coded()
+#width, height, order_num_int = getGeometryInputs()
 
-line_start, line_end, line_value_function = getLineInputs(width, height)
+#line_start, line_end, line_value_function = getLineInputs(width, height)
+line_start, line_end, line_value_function = getLineInputs_hard_coded()
 
 #mat_tensor = getMaterialTensor()
 
 boundary_conditions_ = getBCInputs()
 
-"""boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
+boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
 [boundary_conditions_[1][0],boundary_conditions_[1][1]],[boundary_conditions_[2][0],boundary_conditions_[2][1]],
-[boundary_conditions_[3][0],boundary_conditions_[3][1]],[Type.Dirichlet.value, 0]]"""
+[boundary_conditions_[3][0],boundary_conditions_[3][1]],[Type.Dirichlet.value, 0]]
 
 
 
@@ -72,13 +74,13 @@ if line_coords:  # checks if list is not empty
 NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
 
 # creates the finite elements of the domain
-finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS, height, width, boundary_conditions)
+finite_elements = element_generation(NE_array, NODE_AMOUNT_PER_AXIS, height, width)
 # System-matrix K
 
 K = np.zeros([array_size, array_size])
 
 rhs = np.zeros(array_size)
-K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order, rho)
+K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
 
 
 
@@ -86,9 +88,6 @@ with open('matrix.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(K)
 
-#Resize the Arrays to the size we need them by cutting away the 0 entries
-K = K[:array_size - len(line_values) - 36, :array_size - len(line_values) - 36]
-rhs = rhs[:array_size - len(line_values) - 36]
 
 u = np.linalg.solve(K, rhs)
 

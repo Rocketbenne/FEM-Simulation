@@ -50,10 +50,6 @@ mat_tensor = getMaterialTensor_hard_coded()
 
 boundary_conditions = getBCInputs_hard_coded()
 
-# boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
-# [boundary_conditions_[1][0],boundary_conditions_[1][1]],[boundary_conditions_[2][0],boundary_conditions_[2][1]],
-# [boundary_conditions_[3][0],boundary_conditions_[3][1]],[Type.Dirichlet.value, 0]]
-
 
 # creates the mesh with all the nodes
 mesh_coords = createMesh(width, height, amount_of_nodes_per_axis)
@@ -80,8 +76,7 @@ K = np.zeros([array_size, array_size])
 
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
-rhs = np.zeros(
-    array_size)  # TODO Dont know if thats more "right" and on the RHS should be zeros for internal nodes?? IDK
+rhs = np.zeros(array_size)  # TODO Dont know if thats more "right" and on the RHS should be zeros for internal nodes?? IDK
 K, rhs = bc.apply_boundary_conditions(K, rhs, boundary_conditions, bc.get_boundary_nodes(mesh_coords, width, height),
                                       width, height, amount_of_nodes_per_axis)
 

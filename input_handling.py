@@ -2,7 +2,7 @@
 # First we let the user "input" be done throught putting numbers in the variables
 # Later on we might do it throught the cmd or a pop-up-window
 import numpy as np
-
+import boundary_condition as bc
 
 # used for testing the program, just wirte the values in here
 def getGeometryInputs_hard_coded():
@@ -150,5 +150,4 @@ def getBCInput(side):
 
 # value 10 on the left, value 0 on the right, neumann 0 on top an bottom
 def getBCInputs_hard_coded():
-    return [1, 0], [0, 0], [1, 0], [0, 10]
-
+    return [bc.BoundaryCondition(100,"Dirichlet"),bc.BoundaryCondition(0,"Dirichlet"),bc.BoundaryCondition(100,"Dirichlet"),bc.BoundaryCondition(0,"Dirichlet")]

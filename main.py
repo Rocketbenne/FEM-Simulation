@@ -38,7 +38,6 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
 
 rho = 1
-#mat_tensor = [[1,1],[1,1]]
 width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs_hard_coded()
 #width, height, order_num_int = getGeometryInputs()
 
@@ -83,8 +82,6 @@ K = np.zeros([array_size, array_size])
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
 
-K = K[:array_size - 36, :array_size - 36]
-rhs = rhs[:array_size - 36]
 
 u = np.linalg.solve(K, rhs)
 

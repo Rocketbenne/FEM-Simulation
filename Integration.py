@@ -8,8 +8,8 @@ def dNi_(xi, eta):
         J: Jacobian matrix
     """
 
-    dNi_dxi = np.array([-0.25 * (1 - xi), -0.25 * (1 + xi), 0.25 * (1 + xi), 0.25 * (1 - xi)])
-    dNi_deta = np.array([-0.25 * (1 - eta), 0.25 * (1 - eta), 0.25 * (1 + eta), -0.25 * (1 + eta)])
+    dNi_dxi = np.array([-0.25 * (1 - xi), 0.25 * (1 + xi), 0.25 * (1 + xi), -0.25 * (1 - xi)])
+    dNi_deta = np.array([-0.25 * (1 - eta), -0.25 * (1 - eta), 0.25 * (1 + eta), 0.25 * (1 + eta)])
     return dNi_dxi, dNi_deta
 
 
@@ -47,7 +47,7 @@ def stiffnessMatrix(order,coords,mat_tensor):
             for j in range(order):
                 xi = points[i]
                 eta = points[j]
-                J = Jacobian(xi,eta,coords)
+                J = Jacobian(xi, eta, coords)
                 detJ = np.linalg.det(J)
                 invJ = np.linalg.inv(J)
 
@@ -66,14 +66,13 @@ def stiffnessMatrix(order,coords,mat_tensor):
 
 def Na(xi, eta, node):
     if node == 1:
-        return 0.25 * (1 - xi) * (1 - eta)
+        return (1 - xi) * (1 - eta) / 4
     elif node == 2:
-        return 0.25 * (1 + xi) * (1 - eta)
+        return (1 + xi) * (1 - eta) / 4
     elif node == 3:
-        return 0.25 * (1 + xi) * (1 + eta)
+        return (1 + xi) * (1 + eta) / 4
     elif node == 4:
-        return 0.25 * (1 - xi) * (1 + eta)
-
+        return (1 - xi) * (1 + eta) / 4
     return 0
 
 
@@ -89,4 +88,5 @@ def rhs(order, glob_coords, rho):
 
             N = np.array([Na(xi, eta, 1), Na(xi, eta, 2), Na(xi, eta, 3), Na(xi, eta, 4)])
             fe += N * rho * detJ * weight[i] * weight[j]
-    return fe
+    #return fe
+    return np.zeros(4)

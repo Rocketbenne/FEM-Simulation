@@ -48,7 +48,7 @@ line_start, line_end, line_value_function, amount_of_line_points = getLineInputs
 #mat_tensor = getMaterialTensor()
 mat_tensor = getMaterialTensor_hard_coded()
 
-boundary_conditions_ = getBCInputs_hard_coded()
+boundary_conditions = getBCInputs_hard_coded()
 
 #boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
 #[boundary_conditions_[1][0],boundary_conditions_[1][1]],[boundary_conditions_[2][0],boundary_conditions_[2][1]],
@@ -82,8 +82,8 @@ K = np.zeros([array_size, array_size])
 
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
-K, rhs = bc.apply_boundary_conditions(K,rhs,[bc.BoundaryCondition(1,"Dirichlet"),bc.BoundaryCondition(2,"Dirichlet"),bc.BoundaryCondition(3,"Dirichlet"),bc.BoundaryCondition(4,"Dirichlet")],bc.get_boundary_nodes(mesh_coords,width,height),width,height, amount_of_nodes_per_axis)
-
+rhs = np.zeros(array_size) #TODO Dont know if thats more "right" and on the RHS should be zeros for internal nodes?? IDK
+K, rhs = bc.apply_boundary_conditions(K,rhs,boundary_conditions,bc.get_boundary_nodes(mesh_coords,width,height),width,height, amount_of_nodes_per_axis)
 
 u = np.linalg.solve(K, rhs)
 
@@ -91,17 +91,17 @@ u = np.linalg.solve(K, rhs)
 counter = 0
 out = []
 for i in range(9):
-    out.append(boundary_conditions_[0][1])
+    out.append(boundary_conditions[0].value)
 for i in range(8):
-     out.append(boundary_conditions_[1][1])
-     out.append(boundary_conditions_[3][1])
+     out.append(boundary_conditions[1].value)
+     out.append(boundary_conditions[3].value)
      for j in range(8):
         out.append(u[counter]) 
         counter += 1
-out.append(boundary_conditions_[1][1])
-out.append(boundary_conditions_[3][1])
+out.append(boundary_conditions[1].value)
+out.append(boundary_conditions[3].value)
 for i in range(9):
-    out.append(boundary_conditions_[2][1])
+    out.append(boundary_conditions[2].value)
 
 out = np.array(out)
 

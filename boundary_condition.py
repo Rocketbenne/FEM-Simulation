@@ -25,13 +25,13 @@ def get_boundary_nodes(mesh_coords, width, height):
     x_values = mesh_coords[:, 0]  # Extract all x-coordinates
     y_values = mesh_coords[:, 1]  # Extract all y-coordinates
 
-    left_nodes = mesh_coords[(x_values == 0) & (y_values != height), :]
-    right_nodes = mesh_coords[(x_values == width) & (y_values != 0), :]
-    top_nodes = mesh_coords[(x_values != width) & (y_values == height), :]
-    bottom_nodes = mesh_coords[(x_values != 0) & (y_values == 0), :]
+    left_nodes = mesh_coords[(x_values == 0), :]
+    right_nodes = mesh_coords[(x_values == width), :]
+    top_nodes = mesh_coords[(x_values != 0) & (x_values != width) & (y_values == height), :]
+    bottom_nodes = mesh_coords[(x_values != 0)& (x_values != width) & (y_values == 0), :]
 
     boundary_nodes = (left_nodes, top_nodes, right_nodes, bottom_nodes)
-    return np.array(boundary_nodes)
+    return boundary_nodes
 
 
 def apply_boundary_conditions(system_matrix, rhs, boundary_conditions, boundary_nodes, width, height,
@@ -42,7 +42,7 @@ def apply_boundary_conditions(system_matrix, rhs, boundary_conditions, boundary_
             bc_value = side.value
             if side.bc_type == "Dirichlet":
                 system_matrix[node_index, :] = 0
-                system_matrix[:, node_index] = 0  # TODO: Maybe delete/change this??
+                # system_matrix[:, node_index] = 0  # TODO: Maybe delete/change this??
                 system_matrix[node_index, node_index] = 1
                 rhs[node_index] = bc_value
             elif side.bc_type == "Neumann":

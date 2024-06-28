@@ -88,5 +88,5 @@ def rhs(order, glob_coords, rho):
 
             N = np.array([Na(xi, eta, 1), Na(xi, eta, 2), Na(xi, eta, 3), Na(xi, eta, 4)])
             fe += N * rho * detJ * weight[i] * weight[j]
-    #return fe
-    return np.zeros(4)
+    return fe
+    # return np.zeros(4)

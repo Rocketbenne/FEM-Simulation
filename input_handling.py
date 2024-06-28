@@ -134,11 +134,11 @@ def getMaterialTensor_hard_coded():
     return np.array([[1, 1], [1, 1]])
 
 def getBCInputs():
+    left_side = getBCInput("left")
     top_side = getBCInput("top")
     right_side = getBCInput("right")
     bottom_side = getBCInput("bottom")
-    left_side = getBCInput("left")
-    return top_side, right_side, bottom_side, left_side
+    return left_side, top_side, right_side, bottom_side
 
 def getBCInput(side):
     bc = [0,0]

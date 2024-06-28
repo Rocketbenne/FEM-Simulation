@@ -12,7 +12,7 @@ from exportRes import *
 # %%
 
 '''
-Numbering of Fem_Knots and Elements 
+Numbering of Fem_Knots and Elements
 
 Global Node and Equation Numbers
 From left top to right top, then next row to the right ( as one reads )
@@ -76,29 +76,29 @@ K = np.zeros([array_size, array_size])
 
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
-rhs = np.zeros(array_size)  # TODO Dont know if thats more "right" and on the RHS should be zeros for internal nodes?? IDK
+# rhs = np.zeros(array_size)  # TODO Dont know if thats more "right" and on the RHS should be zeros for internal nodes?? IDK
 K, rhs = bc.apply_boundary_conditions(K, rhs, boundary_conditions, bc.get_boundary_nodes(mesh_coords, width, height),
                                       width, height, amount_of_nodes_per_axis)
 
 u = np.linalg.solve(K, rhs)
 
-# Add togheter the calculated values of the Nodes with Node-Equation-Numbers with the Boundaries
-counter = 0
-out = []
-for i in range(9):
-    out.append(boundary_conditions[0].value)
-for i in range(8):
-    out.append(boundary_conditions[1].value)
-    out.append(boundary_conditions[3].value)
-    for j in range(8):
-        out.append(u[counter])
-        counter += 1
-out.append(boundary_conditions[1].value)
-out.append(boundary_conditions[3].value)
-for i in range(9):
-    out.append(boundary_conditions[2].value)
+# # Add togheter the calculated values of the Nodes with Node-Equation-Numbers with the Boundaries
+# counter = 0
+# out = []
+# for i in range(9):
+#     out.append(boundary_conditions[0].value)
+# for i in range(8):
+#     out.append(boundary_conditions[1].value)
+#     out.append(boundary_conditions[3].value)
+#     for j in range(8):
+#         out.append(u[counter])
+#         counter += 1
+# out.append(boundary_conditions[1].value)
+# out.append(boundary_conditions[3].value)
+# for i in range(9):
+#     out.append(boundary_conditions[2].value)
 
-out = np.array(out)
+# out = np.array(out)
 
 # Node Connectivity Matrix
 global_node_numbers_list = []
@@ -115,7 +115,7 @@ export_writer = EXPORT(4,  # Nodes per Element
                        len(finite_elements),  # Amount of Elements
                        array_size,  # Amount of Nodes
                        2,  # Dimension (2D)
-                       out,  # Result Vector
+                       u,  # Result Vector
                        mesh_coords,  # Node Coordinates
                        global_node_numbers_array,  # Node Connectivity Matrix
                        1)  # Degree of Freedom per Node
@@ -131,8 +131,8 @@ fields = ['coordinates', 'value']
 writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
 writer.writeheader()
 
-for i, value in enumerate(out):
-    writer.writerow({'coordinates': mesh_coords[i], 'value': out[i]})
+for i, value in enumerate(u):
+    writer.writerow({'coordinates': mesh_coords[i], 'value': u[i]})
 
 1  # %%
 

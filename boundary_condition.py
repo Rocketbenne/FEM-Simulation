@@ -34,7 +34,7 @@ def apply_boundary_conditions(system_matrix, rhs,boundary_conditions, boundary_n
             bc_value = side.value
             if side.bc_type == "Dirichlet":
                 system_matrix[node_index, :] = 0
-                system_matrix[:, node_index] = 0
+                system_matrix[:, node_index] = 0 #TODO: Maybe delete/change this??
                 system_matrix[node_index, node_index] = 1
                 rhs[node_index] = bc_value
             elif side.bc_type == "Neumann":

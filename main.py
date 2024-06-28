@@ -1,4 +1,4 @@
-#%%
+# %%
 import numpy as np
 import csv
 
@@ -9,7 +9,7 @@ from finite_element_procedure import *
 from line import *
 from exportRes import *
 
-#%%
+# %%
 
 '''
 Numbering of Fem_Knots and Elements 
@@ -34,25 +34,25 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
 '''
 
-#%%
+# %%
 
 
 rho = 1
+# mat_tensor = [[1,1],[1,1]]
 width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs_hard_coded()
-#width, height, order_num_int = getGeometryInputs()
+# width, height, order_num_int = getGeometryInputs()
 
-#line_start, line_end, line_value_function = getLineInputs(width, height)
+# line_start, line_end, line_value_function = getLineInputs(width, height)
 line_start, line_end, line_value_function, amount_of_line_points = getLineInputs_hard_coded(width, height)
 
-#mat_tensor = getMaterialTensor()
+# mat_tensor = getMaterialTensor()
 mat_tensor = getMaterialTensor_hard_coded()
 
-boundary_conditions_ = getBCInputs_hard_coded()
+boundary_conditions = getBCInputs_hard_coded()
 
-boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
-[boundary_conditions_[1][0],boundary_conditions_[1][1]],[boundary_conditions_[2][0],boundary_conditions_[2][1]],
-[boundary_conditions_[3][0],boundary_conditions_[3][1]],[Type.Dirichlet.value, 0]]
-
+# boundary_conditions = [[boundary_conditions_[0][0],boundary_conditions_[0][1]],
+# [boundary_conditions_[1][0],boundary_conditions_[1][1]],[boundary_conditions_[2][0],boundary_conditions_[2][1]],
+# [boundary_conditions_[3][0],boundary_conditions_[3][1]],[Type.Dirichlet.value, 0]]
 
 
 # creates the mesh with all the nodes
@@ -69,19 +69,21 @@ line_values = []
 if line_coords:  # checks if list is not empty
     line_values = getLineValues(line_coords, line_value_function)
 
-
 # creates the array containing the node-equations
 NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
 
 # creates the finite elements of the domain
-finite_elements = element_generation(NE_array, amount_of_nodes_per_axis, height, width)
+finite_elements = element_generation(NE_array, amount_of_nodes_per_axis, height, width, amount_of_nodes_per_axis)
 # System-matrix K
 
 K = np.zeros([array_size, array_size])
 
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
-
+rhs = np.zeros(
+    array_size)  # TODO Dont know if thats more "right" and on the RHS should be zeros for internal nodes?? IDK
+K, rhs = bc.apply_boundary_conditions(K, rhs, boundary_conditions, bc.get_boundary_nodes(mesh_coords, width, height),
+                                      width, height, amount_of_nodes_per_axis)
 
 u = np.linalg.solve(K, rhs)
 
@@ -89,42 +91,41 @@ u = np.linalg.solve(K, rhs)
 counter = 0
 out = []
 for i in range(9):
-    out.append(boundary_conditions[0][1])
+    out.append(boundary_conditions[0].value)
 for i in range(8):
-     out.append(boundary_conditions[1][1])
-     out.append(boundary_conditions[3][1])
-     for j in range(8):
-        out.append(u[counter]) 
+    out.append(boundary_conditions[1].value)
+    out.append(boundary_conditions[3].value)
+    for j in range(8):
+        out.append(u[counter])
         counter += 1
-out.append(boundary_conditions[1][1])
-out.append(boundary_conditions[3][1])
+out.append(boundary_conditions[1].value)
+out.append(boundary_conditions[3].value)
 for i in range(9):
-    out.append(boundary_conditions[2][1])
+    out.append(boundary_conditions[2].value)
 
 out = np.array(out)
-
 
 # Node Connectivity Matrix
 global_node_numbers_list = []
 for j in range(0, 9):
-     for i in range(0, 9):
-          arr = np.array([amount_of_nodes_per_axis *(j+1) + i, amount_of_nodes_per_axis*(j+1) + (i+1), amount_of_nodes_per_axis *(j) + i, amount_of_nodes_per_axis *(j) + (i+1)])
-          global_node_numbers_list.append(arr)
-        
+    for i in range(0, 9):
+        arr = np.array([amount_of_nodes_per_axis * (j + 1) + i, amount_of_nodes_per_axis * (j + 1) + (i + 1),
+                        amount_of_nodes_per_axis * (j) + i, amount_of_nodes_per_axis * (j) + (i + 1)])
+        global_node_numbers_list.append(arr)
+
 global_node_numbers_array = np.array(global_node_numbers_list)
 
 # Export Writer
-export_writer = EXPORT(4,                       # Nodes per Element
-                       len(finite_elements),    # Amount of Elements
-                       array_size,              # Amount of Nodes
-                       2,                       # Dimension (2D)
-                       out,                     # Result Vector
-                       mesh_coords,             # Node Coordinates
-                       global_node_numbers_array, # Node Connectivity Matrix
-                       1)                       # Degree of Freedom per Node
+export_writer = EXPORT(4,  # Nodes per Element
+                       len(finite_elements),  # Amount of Elements
+                       array_size,  # Amount of Nodes
+                       2,  # Dimension (2D)
+                       out,  # Result Vector
+                       mesh_coords,  # Node Coordinates
+                       global_node_numbers_array,  # Node Connectivity Matrix
+                       1)  # Degree of Freedom per Node
 
 export_writer.writeResults()
-
 
 # Write values to a .csv file for the CI-CD System
 filename = 'program_output.csv'
@@ -136,6 +137,8 @@ writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
 writer.writeheader()
 
 for i, value in enumerate(out):
-        writer.writerow({'coordinates': mesh_coords[i], 'value': out[i]})
+    writer.writerow({'coordinates': mesh_coords[i], 'value': out[i]})
+
+1  # %%
 
 # %%

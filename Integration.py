@@ -66,14 +66,13 @@ def stiffnessMatrix(order,coords,mat_tensor):
 
 def Na(xi, eta, node):
     if node == 1:
-        return 0.25 * (1 - xi) * (1 - eta)
+        return (1 - xi) * (1 - eta) / 4
     elif node == 2:
-        return 0.25 * (1 + xi) * (1 - eta)
+        return (1 + xi) * (1 - eta) / 4
     elif node == 3:
-        return 0.25 * (1 + xi) * (1 + eta)
+        return (1 + xi) * (1 + eta) / 4
     elif node == 4:
-        return 0.25 * (1 - xi) * (1 + eta)
-
+        return (1 - xi) * (1 + eta) / 4
     return 0
 
 
@@ -91,3 +90,4 @@ def rhs(order, glob_coords, rho):
             N = np.array([Na(xi, eta, 1), Na(xi, eta, 2), Na(xi, eta, 3), Na(xi, eta, 4)])
             fe += N * rho * detJ * weight[i] * weight[j]
     return fe
+    # return np.zeros(4)

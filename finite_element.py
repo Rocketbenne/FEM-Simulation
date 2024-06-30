@@ -1,34 +1,33 @@
 import numpy as np
 import boundary_condition as bc
 
+
 class FEM_Element:
-    def __init__(self, global_element_number, global_node_numbers, global_cords, boundaries = None):
+    def __init__(self, global_element_number, global_node_numbers, global_cords, boundaries=None):
         self.global_element_number = global_element_number
         self.global_node_numbers = global_node_numbers
         self.global_cords = global_cords
         self.boundaries = boundaries
-        
+
     def get_global_node_numbers(self):
         return self.global_node_numbers
-    
+
     def get_global_element_number(self):
         return self.global_element_number
 
     def get_global_coords(self):
         return self.global_cords
-    
+
     def get_boundaries(self):
         return self.boundaries
-    
-    def get_global_equation_number(self):
-        return self.global_equation_number
+
 
 # Generation of the finite elements in the domain
 # Inputs: Array containing the the node equation numbers
 #         amount of nodes per axis
 # Output: Array containing the finite Elements
 def element_generation(node_equation_array, dimension, height, width, amount_of_nodes_per_axis):
-    elements = np.empty((dimension - 1)**2, dtype=FEM_Element)
+    elements = np.empty((dimension - 1) ** 2, dtype=FEM_Element)
 
     delta_x = width / (dimension - 1)
     delta_y = height / (dimension - 1)

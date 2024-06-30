@@ -1,4 +1,4 @@
-#%%
+# %%
 import numpy as np
 import csv
 
@@ -9,10 +9,10 @@ from finite_element_procedure import *
 from line import *
 from exportRes import *
 
-#%%
+# %%
 
 '''
-Numbering of Fem_Knots and Elements 
+Numbering of Fem_Knots and Elements
 
 Global Node and Equation Numbers
 From left top to right top, then next row to the right ( as one reads )
@@ -34,7 +34,7 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
 '''
 
-#%%
+# %%
 
 
 rho = 1
@@ -44,7 +44,7 @@ width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs_hard_
 #line_start, line_end, line_value_function, amount_of_line_points = getLineInputs(width, height)
 line_start, line_end, line_value_function, amount_of_line_points = getLineInputs_hard_coded(width, height)
 
-#mat_tensor = getMaterialTensor()
+# mat_tensor = getMaterialTensor()
 mat_tensor = getMaterialTensor_hard_coded()
 
 boundary_conditions = getBCInputs_hard_coded()
@@ -63,7 +63,6 @@ line_coords = getLineCoordinates(line_start, line_end, mesh_coords, amount_of_li
 line_values = []
 if line_coords:  # checks if list is not empty
     line_values = getLineValues(line_coords, line_value_function)
-
 
 # creates the array containing the node-equations
 NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
@@ -103,7 +102,6 @@ export_writer = EXPORT(4,                       # Nodes per Element
                        1)                       # Degree of Freedom per Node
 
 export_writer.writeResults()
-
 
 # Write values to a .csv file for the CI-CD System
 filename = 'program_output.csv'

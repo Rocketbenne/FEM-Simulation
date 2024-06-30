@@ -46,6 +46,7 @@ def get_node_equation_array(array_size, mesh_coords, line_coords = []):
 # Output: global equation number
 def EQ(finite_elements, local_number, element_number):
     return finite_elements[element_number].get_global_node_numbers()[local_number - 1]
+    #return finite_elements[element_number].get_global_equation_number()[local_number - 1]
 
 # Assembling-Algorithm from the VO
 # Inputs: array of finite-element-objects
@@ -60,16 +61,18 @@ def assembling_algorithm(finite_elements, number_of_element_nodes, K, Rhs, mater
 
         # Compute the elements stiffness matrix
         element_stiffness_matrix = stiffnessMatrix(order, global_coords, material_tensor)
+        #print(element_stiffness_matrix)
         # Compute the elements rhs matrix
-        element_force_vector = rhs(order, global_coords, rho)
+        element_force_vector =  np.zeros(4)  #rhs(order, global_coords, rho) #TODO i würd mol so lossen. des ich wia wenn ba dr storken formulierung af dr rechten seite 0 steat. also quellterm = 0, lei die rondbedingungen mochen wos
+        #print(element_force_vector)
 
-        for a in range(1, number_of_element_nodes):
+        for a in range(1, number_of_element_nodes+1):
             eq1 = EQ(finite_elements, a, e)
             if eq1 > 0:
-                Rhs[eq1 - 1] += element_force_vector[a]
-                for b in range(1, number_of_element_nodes):
+                Rhs[eq1 - 1] += element_force_vector[a-1]
+                for b in range(1, number_of_element_nodes+1):
                     eq2 = EQ(finite_elements, b, e)
                     if eq2 > 0:
                         # Add the appropriate component of the element stiffness matrix to K
-                        K[eq1 - 1, eq2 - 1] += element_stiffness_matrix[a, b]
+                        K[eq1 - 1, eq2 - 1] += element_stiffness_matrix[a-1, b-1]
     return K, Rhs

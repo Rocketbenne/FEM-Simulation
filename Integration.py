@@ -8,8 +8,8 @@ def dNi_(xi, eta):
         J: Jacobian matrix
     """
 
-    dNi_dxi = np.array([-0.25 * (1 - xi), -0.25 * (1 + xi), 0.25 * (1 + xi), 0.25 * (1 - xi)])
-    dNi_deta = np.array([-0.25 * (1 - eta), 0.25 * (1 - eta), 0.25 * (1 + eta), -0.25 * (1 + eta)])
+    dNi_deta = np.array([-0.25 * (1 - xi), -0.25 * (1 + xi), 0.25 * (1 + xi), 0.25 * (1 - xi)])
+    dNi_dxi = np.array([-0.25 * (1 - eta), 0.25 * (1 - eta), 0.25 * (1 + eta), -0.25 * (1 + eta)])
     return dNi_dxi, dNi_deta
 
 
@@ -44,24 +44,24 @@ def stiffnessMatrix(order,coords,mat_tensor):
     Ke = np.zeros((4,4))
     for i in range(order):
         for j in range(order):
-            for j in range(order):
-                xi = points[i]
-                eta = points[j]
-                J = Jacobian(xi,eta,coords)
-                detJ = np.linalg.det(J)
-                invJ = np.linalg.inv(J)
+            xi = points[i]
+            eta = points[j]
+            J = Jacobian(xi,eta,coords)
+            detJ = np.linalg.det(J)
+            invJ = np.linalg.inv(J)
 
 
-                global_Na = np.zeros(4)
-                global_Nb = np.zeros(4)
-                dN_dxi, dN_deta = dNi_(xi, eta)
-                for k in range(4):
-                    global_Na[k] = invJ[0, 0] * dN_dxi[k] + invJ[0, 1] * dN_deta[k]
-                    global_Nb[k] = invJ[1, 0] * dN_dxi[k] + invJ[1, 1] * dN_deta[k]
-                B = np.array([global_Na, global_Nb])
+            global_Na = np.zeros(4)
+            global_Nb = np.zeros(4)
+            dN_dxi, dN_deta = dNi_(xi, eta)
+            for k in range(4):
+                global_Na[k] = invJ[0, 0] * dN_dxi[k] + invJ[0, 1] * dN_deta[k]
+                global_Nb[k] = invJ[1, 0] * dN_dxi[k] + invJ[1, 1] * dN_deta[k]
+            B = np.array([global_Na, global_Nb])
 
-                Ke += (B.T @ mat_tensor @ B) * detJ * weight[i] * weight[j]
+            Ke += (B.T @ mat_tensor @ B) * detJ * weight[i] * weight[j]
     return Ke
+
 
 
 def Na(xi, eta, node):
@@ -86,6 +86,7 @@ def rhs(order, glob_coords, rho):
             eta = points[j]
             J = Jacobian(xi, eta, glob_coords)
             detJ = np.linalg.det(J)
+            
 
             N = np.array([Na(xi, eta, 1), Na(xi, eta, 2), Na(xi, eta, 3), Na(xi, eta, 4)])
             fe += N * rho * detJ * weight[i] * weight[j]

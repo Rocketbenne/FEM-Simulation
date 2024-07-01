@@ -50,11 +50,11 @@ def apply_boundary_conditions(system_matrix, rhs, boundary_conditions, boundary_
                 raise ValueError("Invalid boundary condition type")
     return system_matrix, rhs
 
-
-def find_global_node_nr(node,width,height, amount_of_nodes_per_axis):
-    x_step_size = width/ (amount_of_nodes_per_axis - 1)
-    y_step_size = height/ (amount_of_nodes_per_axis - 1)
-    node_in_row = node[0]/x_step_size + 1
-    node_in_col = amount_of_nodes_per_axis - node[1]/y_step_size 
-
+def find_global_node_nr(node, width, height, amount_of_nodes_per_axis):
+    x_step_size = width / (amount_of_nodes_per_axis - 1)
+    y_step_size = height / (amount_of_nodes_per_axis - 1)
+    
+    node_in_row = round(node[0] / x_step_size) + 1
+    node_in_col = amount_of_nodes_per_axis - round(node[1] / y_step_size)
+    
     return int(node_in_row + (node_in_col - 1) * amount_of_nodes_per_axis)

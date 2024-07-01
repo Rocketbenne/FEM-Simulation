@@ -1,6 +1,7 @@
 # %%
 import numpy as np
 import csv
+import time
 
 from input_handling import *
 from mesh_generation import *
@@ -49,6 +50,7 @@ mat_tensor = getMaterialTensor_hard_coded()
 
 boundary_conditions = getBCInputs_hard_coded()
 
+start_time = time.time()
 
 # creates the mesh with all the nodes
 mesh_coords = createMesh(width, height, amount_of_nodes_per_axis)
@@ -90,6 +92,10 @@ for j in range(0, amount_of_nodes_per_axis - 1):
           global_node_numbers_list.append(arr)
         
 global_node_numbers_array = np.array(global_node_numbers_list)
+
+end_time = time.time()
+
+print(f"Elapsed Time: {end_time-start_time} seconds.")
 
 # Export Writer
 export_writer = EXPORT(4,                       # Nodes per Element

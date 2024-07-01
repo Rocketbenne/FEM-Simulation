@@ -6,7 +6,7 @@ import boundary_condition as bc
 
 # used for testing the program, just wirte the values in here
 def getGeometryInputs_hard_coded():
-    width, height, order_num_int, amount_of_nodes_per_axis = 90, 180, 4, 5
+    width, height, order_num_int, amount_of_nodes_per_axis = 90, 180, 4, 20
 
     return width, height, order_num_int, amount_of_nodes_per_axis
 
@@ -150,5 +150,5 @@ def getBCInput(side):
 
 # value 10 on the left, value 0 on the right, neumann 0 on top an bottom
 def getBCInputs_hard_coded():
-    return [bc.BoundaryCondition(100,"Dirichlet"),bc.BoundaryCondition(0,"Neumann"),bc.BoundaryCondition(0,"Dirichlet"),bc.BoundaryCondition(0,"Neumann")]
+    return [bc.BoundaryCondition(100,"Dirichlet"),bc.BoundaryCondition(100,"Dirichlet"),bc.BoundaryCondition(0,"Dirichlet"),bc.BoundaryCondition(0,"Dirichlet")]
 

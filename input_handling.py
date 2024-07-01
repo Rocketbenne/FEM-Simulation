@@ -46,7 +46,20 @@ def getNumberWithZero():
             number = float(number)
             return number
         except ValueError:
-            print("Please enter a number greater than 0.\n")
+            print("Please enter a number.\n")
+
+# get a non-integer number (can also be zero) from the user throught the console and makes error checks
+def getNumberInRangeWithZero(range):
+    while True:
+        number = input()
+        try:
+            number = float(number)
+            if(number <= range and number >= 0):
+                    return int(number)
+            else:
+                print("Please enter a Number greater than (or equal) 0 and less (or equal) than " + str(range) + ".\n")
+        except ValueError:    
+            print("Please enter a Number greater than (or equal) 0 and less (or equal) than " + str(range) + ".\n")
 
 
 # get a integer number above zero from the user throught the console and makes error checks
@@ -86,25 +99,31 @@ def getNumberFromUserWithAll():
 
 # user input for line with given value
 def getLineInputs(width, height):
-    start, end, value_function, amount_of_line_points = 0, 0, "", 0
+    start, end, value_function, amount_of_line_points, = (0, 0), (0, 0), "", 0
 
+    print("Do you want to define a Line in the Domain? Yes [0], No [1]")
+    line_bool = getNumberFromUserInRangeWithZero(1)
+
+    if line_bool:
+        return start, end, value_function, amount_of_line_points, line_bool
+    
     print("X-Coordinate of the Start-Point of the Line: ")
-    x_start = getNumberFromUserInRangeWithZero(width)
+    x_start = getNumberInRangeWithZero(width)
     print("Y-Coordinate of the Start-Point of the Line: ")
-    y_start = getNumberFromUserInRangeWithZero(height)
+    y_start = getNumberInRangeWithZero(height)
     print("X-Coordinate of the End-Point of the Line: ")
-    x_end = getNumberFromUserInRangeWithZero(width)
+    x_end = getNumberInRangeWithZero(width)
     print("Y-Coordinate of the End-Point of the Line: ")
-    y_end = getNumberFromUserInRangeWithZero(height)
+    y_end = getNumberInRangeWithZero(height)
     print("Input the value of the Line: ")
     value_function = input()
     print("Input the amount of Points the line should be interpolated by: ")
     amount_of_line_points = getIntegerNumberAboveZero()
 
-    start = (x_start, x_end)
-    end = (y_start, y_end)
+    start = (x_start, y_start)
+    end = (x_end, y_end)
 
-    return start, end, value_function, amount_of_line_points
+    return start, end, value_function, amount_of_line_points, line_bool
 
 def getLineInputs_hard_coded(height, width):
     start = (50, 0)
@@ -138,14 +157,21 @@ def getBCInputs():
     top_side = getBCInput("top")
     right_side = getBCInput("right")
     bottom_side = getBCInput("bottom")
-    return left_side, top_side, right_side, bottom_side
+    #return left_side, top_side, right_side, bottom_side
+    return [bc.BoundaryCondition(left_side[1], left_side[0]),bc.BoundaryCondition(top_side[1], top_side[0]),bc.BoundaryCondition(right_side[1], right_side[0]),bc.BoundaryCondition(bottom_side[1], bottom_side[0])]
 
 def getBCInput(side):
-    bc = [0,0]
+    bc = (0,0)
     print(f"Input the {side} boundary type  0=Dirichlet 1=Neumann: ")
-    bc[0] = getNumberFromUserInRangeWithZero(1)  # TODO check if kommazohlen gian
+    bc = (getNumberFromUserInRangeWithZero(1), bc[1])
     print(f"Input the {side} boundary value: ")
-    bc[1] = getNumberFromUserWithAll()
+    bc = (bc[0], getNumberWithZero())
+
+    if bc[0] == 0:
+        bc = ("Dirichlet", bc[1])
+    else:
+        bc = ("Neumann", bc[1])
+
     return bc
 
 # value 10 on the left, value 0 on the right, neumann 0 on top an bottom

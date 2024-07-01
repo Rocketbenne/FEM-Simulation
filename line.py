@@ -6,7 +6,10 @@ import math
 #         end-coordinate of the line
 #         coordinates of the mesh
 # Output: The line represented as coordinates of the mesh
-def getLineCoordinates(start, end, mesh_coords, amount_of_line_points):
+def getLineCoordinates(start, end, mesh_coords, amount_of_line_points, line_bool):
+
+    if line_bool:
+        return []
 
     # the higher this is the more points on the line get queried
     # this could in some cases result to more points beeing 'chosen', 
@@ -16,7 +19,7 @@ def getLineCoordinates(start, end, mesh_coords, amount_of_line_points):
     x = np.linspace(start[0], end[0], amount_of_line_points)
     y = np.linspace(start[1], end[1], amount_of_line_points)
     coords = np.column_stack((x, y))
-    
+ 
     # Initialization of BallTree
     balltree = BallTree(mesh_coords)
 
@@ -39,8 +42,8 @@ def getLineCoordinates(start, end, mesh_coords, amount_of_line_points):
     # get rid of duplicates
     values = list(set(values))
 
-    #return values
-    return []
+    return values
+    #return []
 
 # Generates the value of the given function and the given coordinates
 # The Function needs to have the variables x and y in curved brackets

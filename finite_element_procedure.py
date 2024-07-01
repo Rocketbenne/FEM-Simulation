@@ -63,7 +63,7 @@ def assembling_algorithm(finite_elements, number_of_element_nodes, K, Rhs, mater
         element_stiffness_matrix = stiffnessMatrix(order, global_coords, material_tensor)
         #print(element_stiffness_matrix)
         # Compute the elements rhs matrix
-        element_force_vector =  np.zeros(4)  #rhs(order, global_coords, rho) #TODO i würd mol so lossen. des ich wia wenn ba dr storken formulierung af dr rechten seite 0 steat. also quellterm = 0, lei die rondbedingungen mochen wos
+        element_force_vector =  np.zeros(4)  #rhs(order, global_coords, rho)
         #print(element_force_vector)
 
         for a in range(1, number_of_element_nodes+1):

@@ -37,18 +37,19 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
 # %%
 
-
 rho = 1
-width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs_hard_coded()
-#width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs()
 
-#line_start, line_end, line_value_function, amount_of_line_points = getLineInputs(width, height)
-line_start, line_end, line_value_function, amount_of_line_points = getLineInputs_hard_coded(width, height)
 
-# mat_tensor = getMaterialTensor()
-mat_tensor = getMaterialTensor_hard_coded()
+#width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs_hard_coded()
+#line_start, line_end, line_value_function, amount_of_line_points = getLineInputs_hard_coded(width, height)
+#mat_tensor = getMaterialTensor_hard_coded()
+#boundary_conditions = getBCInputs_hard_coded()
 
-boundary_conditions = getBCInputs_hard_coded()
+width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs()
+line_start, line_end, line_value_function, amount_of_line_points, line_bool = getLineInputs(width, height)
+mat_tensor = getMaterialTensor()
+boundary_conditions = getBCInputs()
+
 
 start_time = time.time()
 
@@ -60,7 +61,7 @@ array_size = mesh_coords.shape[0]
 
 # get the coordinates of the Line
 line_coords = []
-line_coords = getLineCoordinates(line_start, line_end, mesh_coords, amount_of_line_points)
+line_coords = getLineCoordinates(line_start, line_end, mesh_coords, amount_of_line_points, line_bool)
 
 line_values = []
 if line_coords:  # checks if list is not empty
@@ -77,7 +78,6 @@ K = np.zeros([array_size, array_size])
 
 rhs = np.zeros(array_size)
 K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
-#rhs = np.zeros(array_size) #TODO Dont know if thats more "right" and on the RHS should be zeros for internal nodes?? IDK
 K, rhs = bc.apply_boundary_conditions(K,rhs,boundary_conditions,bc.get_boundary_nodes(mesh_coords,width,height),width,height, amount_of_nodes_per_axis)
 K, rhs = apply_line_values(K, rhs, mesh_coords, line_coords, line_values)
 

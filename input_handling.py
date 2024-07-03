@@ -163,13 +163,17 @@ def getBCInput(side):
     bc = (0,0)
     print(f"Input the {side} boundary type  0=Dirichlet 1=Neumann: ")
     bc = (getNumberFromUserInRangeWithZero(1), bc[1])
-    print(f"Input the {side} boundary value: ")
-    bc = (bc[0], getNumberWithZero())
+
+    
 
     if bc[0] == 0:
         bc = ("Dirichlet", bc[1])
+        print(f"Input the {side} boundary value: ")
+        bc = (bc[0], getNumberWithZero())
     else:
-        bc = ("Neumann", bc[1])
+        bc = ("Neumann", 0)
+        
+        
 
     return bc
 

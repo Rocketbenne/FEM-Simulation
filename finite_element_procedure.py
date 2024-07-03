@@ -46,7 +46,6 @@ def get_node_equation_array(array_size, mesh_coords, line_coords = []):
 # Output: global equation number
 def EQ(finite_elements, local_number, element_number):
     return finite_elements[element_number].get_global_node_numbers()[local_number - 1]
-    #return finite_elements[element_number].get_global_equation_number()[local_number - 1]
 
 # Assembling-Algorithm from the VO
 # Inputs: array of finite-element-objects
@@ -61,10 +60,9 @@ def assembling_algorithm(finite_elements, number_of_element_nodes, K, Rhs, mater
 
         # Compute the elements stiffness matrix
         element_stiffness_matrix = stiffnessMatrix(order, global_coords, material_tensor)
-        #print(element_stiffness_matrix)
+
         # Compute the elements rhs matrix
         element_force_vector =  np.zeros(4)  #rhs(order, global_coords, rho)
-        #print(element_force_vector)
 
         for a in range(1, number_of_element_nodes+1):
             eq1 = EQ(finite_elements, a, e)

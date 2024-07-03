@@ -157,7 +157,6 @@ def getBCInputs():
     top_side = getBCInput("top")
     right_side = getBCInput("right")
     bottom_side = getBCInput("bottom")
-    #return left_side, top_side, right_side, bottom_side
     return [bc.BoundaryCondition(left_side[1], left_side[0]),bc.BoundaryCondition(top_side[1], top_side[0]),bc.BoundaryCondition(right_side[1], right_side[0]),bc.BoundaryCondition(bottom_side[1], bottom_side[0])]
 
 def getBCInput(side):
@@ -174,7 +173,6 @@ def getBCInput(side):
 
     return bc
 
-# value 10 on the left, value 0 on the right, neumann 0 on top an bottom
 def getBCInputs_hard_coded():
     return [bc.BoundaryCondition(100,"Dirichlet"),bc.BoundaryCondition(100,"Dirichlet"),bc.BoundaryCondition(0,"Dirichlet"),bc.BoundaryCondition(0,"Dirichlet")]
 

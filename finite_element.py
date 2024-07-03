@@ -26,7 +26,7 @@ class FEM_Element:
 # Inputs: Array containing the the node equation numbers
 #         amount of nodes per axis
 # Output: Array containing the finite Elements
-def element_generation(node_equation_array, dimension, height, width, amount_of_nodes_per_axis):
+def element_generation(dimension, height, width, amount_of_nodes_per_axis):
     elements = np.empty((dimension - 1) ** 2, dtype=FEM_Element)
 
     delta_x = width / (dimension - 1)

@@ -11,11 +11,6 @@ def getLineCoordinates(start, end, mesh_coords, amount_of_line_points, line_bool
     if line_bool:
         return []
 
-    # the higher this is the more points on the line get queried
-    # this could in some cases result to more points beeing 'chosen', 
-    # thus more accurate result of the line 
-    #AMOUNT_OF_POINTS_ON_LINE = 10
-
     x = np.linspace(start[0], end[0], amount_of_line_points)
     y = np.linspace(start[1], end[1], amount_of_line_points)
     coords = np.column_stack((x, y))
@@ -43,7 +38,6 @@ def getLineCoordinates(start, end, mesh_coords, amount_of_line_points, line_bool
     values = list(set(values))
 
     return values
-    #return []
 
 # Generates the value of the given function and the given coordinates
 # The Function needs to have the variables x and y in curved brackets
@@ -76,6 +70,14 @@ def evaluate_function(function, x, y):
         print("Error evaluating function:", e)
         return None
     
+# Applies the values of the given line to the system-matrix and right hand side
+# Inputs: System Matrix
+#         Right Hand Side vector
+#         Coordinates of the nodes
+#         Coordinates of the line
+#         Values of the line
+# Output: System Matrix
+#         Right Hand Side vector
 def apply_line_values(K, rhs, mesh_coords, line_coords, line_values):
 
     # apply line
@@ -87,7 +89,6 @@ def apply_line_values(K, rhs, mesh_coords, line_coords, line_values):
                 line_c = np.array(line_c)
             
                 if np.all(coord == line_c):
-                    #print(j, i)
                     K[i[0], :] = 0
                     K[i[0], i[0]] = 1
                     rhs[i[0]] = line_values[j[0]]

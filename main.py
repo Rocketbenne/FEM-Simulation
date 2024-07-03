@@ -38,8 +38,6 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 # %%
 
 rho = 1
-
-
 #width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs_hard_coded()
 #line_start, line_end, line_value_function, amount_of_line_points = getLineInputs_hard_coded(width, height)
 #mat_tensor = getMaterialTensor_hard_coded()
@@ -71,7 +69,7 @@ if line_coords:  # checks if list is not empty
 NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
 
 # creates the finite elements of the domain
-finite_elements = element_generation(NE_array, amount_of_nodes_per_axis, height, width, amount_of_nodes_per_axis)
+finite_elements = element_generation(amount_of_nodes_per_axis, height, width, amount_of_nodes_per_axis)
 # System-matrix K
 
 K = np.zeros([array_size, array_size])

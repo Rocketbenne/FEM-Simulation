@@ -19,7 +19,7 @@ import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from mesh_generation import *
 
-mesh = createMesh(9, 9)
+mesh = createMesh(9, 9, 10)
 
 values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 values = np.tile(values, 10)

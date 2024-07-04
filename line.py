@@ -11,10 +11,10 @@ def getLineCoordinates(start, end, mesh_coords, amount_of_line_points, line_bool
     if line_bool:
         return []
 
-    x = np.linspace(start[0], end[0], amount_of_line_points)
+    x = np.linspace(start[0], end[0], amount_of_line_points) # Problem bei Kommazohlen
     y = np.linspace(start[1], end[1], amount_of_line_points)
     coords = np.column_stack((x, y))
- 
+
     # Initialization of BallTree
     balltree = BallTree(mesh_coords)
 

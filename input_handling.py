@@ -55,7 +55,7 @@ def getNumberInRangeWithZero(range):
         try:
             number = float(number)
             if(number <= range and number >= 0):
-                    return int(number)
+                    return number
             else:
                 print("Please enter a Number greater than (or equal) 0 and less (or equal) than " + str(range) + ".\n")
         except ValueError:    

@@ -10,6 +10,8 @@ from finite_element_procedure import *
 from line import *
 from exportRes import *
 
+import argparse
+
 # %%
 
 '''
@@ -35,19 +37,54 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
 '''
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Input values for the Finite-Element-Method Simulation")  # TODO formatter_class=argparse.ArgumentDefaultsHelpFormatter
+
+    req_args = parser.add_argument_group('Base Parameters')
+    opt_args = parser.add_argument_group('Optional Parameters')
+
+    # Basic Inputs
+    req_args.add_argument('--width',          type=int,   help="Width of the Domain",                 default=100)
+    req_args.add_argument('--height',         type=int,   help="Height of the Domain",                default=100)
+    req_args.add_argument('--order_num_int',  type=int,   help="Order of the Numerical Integration",  default=3)      
+    req_args.add_argument('--nodes_per_axis', type=int,   help="Amount of Nodes per Axis",            default=10)
+    req_args.add_argument('--mat_tensor',                 help="Material Tensor",                     default=[[1, 0], [0, 1]])
+
+    # Boundary Conditions
+    req_args.add_argument('--left_bound',                 help="Condition of the Left boundary",      default=[100, "Dirichlet"])   # TODO good way to do it ?
+    req_args.add_argument('--top_bound',                  help="Condition of the Top boundary",       default=[0, "Neumann"])
+    req_args.add_argument('--right_bound',                help="Condition of the Right boundary",     default=[0, "Dirichlet"])
+    req_args.add_argument('--bottom_bound',               help="Condition of the Botton boundary",    default=[0, "Neumann"])
+    
+    # Line Inputs
+    opt_args.add_argument('--line_start',   type=[int],   help="X- and Y-Value of the Startpoint of the Line", required=False)
+    opt_args.add_argument('--line_end',     type=[int],   help="X- and Y-Value of the Endpoint of the Line", required=False)
+    opt_args.add_argument('--line_value',     type=str,   help="Value or Function to describe the Values of the Line. (X/Y-Coordinates need to be in {}-brackets)", required=False)
+
+    args = parser.parse_args()
+
+    print(args.mat_tensor)      ##mat_tensor=[[1, 1], [1, 1]]  ## TODO how to properly input Tensor?
+
+    if (args.line_start and args.line_end and args.line_value) != None:  # check if Line-arguments were given
+         line_bool = True
+
 # %%
 
-rho = 1
+rho = 1  # TODO what does Rho do... despite beeing value in calculation
+
+# Hardcoded Inputs
 #width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs_hard_coded()
 #line_start, line_end, line_value_function, amount_of_line_points = getLineInputs_hard_coded(width, height)
 #mat_tensor = getMaterialTensor_hard_coded()
 #boundary_conditions = getBCInputs_hard_coded()
 
-width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs()
-line_start, line_end, line_value_function, amount_of_line_points, line_bool = getLineInputs(width, height)
-mat_tensor = getMaterialTensor()
-boundary_conditions = getBCInputs()
+# User Input with CMD as part of the program 
+#width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs()
+#line_start, line_end, line_value_function, amount_of_line_points, line_bool = getLineInputs(width, height)
+#mat_tensor = getMaterialTensor()
+#boundary_conditions = getBCInputs()
 
+# User Input throught CMD Arguments
 
 start_time = time.time()
 
@@ -118,7 +155,5 @@ writer.writeheader()
 
 for i, value in enumerate(u):
         writer.writerow({'coordinates': mesh_coords[i], 'value': u[i]})
-
-# %%
 
 # %%

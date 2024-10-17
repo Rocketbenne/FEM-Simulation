@@ -5,6 +5,7 @@
 __pycache__/
 tests/__pycache__/
 .pytest_cache/
+source/__pycache__
 
 ## Environments
 venv/

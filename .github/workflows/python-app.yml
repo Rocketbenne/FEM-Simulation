@@ -35,7 +35,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: execute py script
-      run: python main.py
+      run: python source/main.py
 
     - name: Lint with flake8
       run: |

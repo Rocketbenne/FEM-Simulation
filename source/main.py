@@ -37,6 +37,84 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
 '''
 
+def fem_init(width, height, amount_of_nodes_per_axis, mesh_coords, line_start, line_end, amount_of_line_points, line_value):
+    '''Initializes Basic Values like Node-Coordinates, Values of the Line etc'''
+    
+     # creates the mesh with all the nodes
+    mesh_coords = createMesh(width, height, amount_of_nodes_per_axis)
+
+    # gets amount of coordinate pairs
+    array_size = mesh_coords.shape[0]
+
+    # get the coordinates of the Line
+    line_coords = []
+    line_coords = getLineCoordinates(line_start, line_end, mesh_coords, amount_of_line_points, line_bool)
+
+    line_values = []
+    if line_coords:  # checks if list is not empty
+        line_values = getLineValues(line_coords, line_value)            # old line_value_function
+
+
+def stiffness_matrix():
+
+    rho = 1  # TODO what does Rho do... despite beeing value in calculation
+
+    # System-matrix K
+
+    K = np.zeros([array_size, array_size])
+
+    rhs = np.zeros(array_size)
+    K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
+    K, rhs = bc.apply_boundary_conditions(K,rhs,boundary_conditions,bc.get_boundary_nodes(mesh_coords,width,height),width,height, amount_of_nodes_per_axis)
+    K, rhs = apply_line_values(K, rhs, mesh_coords, line_coords, line_values)
+
+    u = np.linalg.solve(K, rhs)
+
+    return K, u
+
+
+def node_connectivity_matrix(amount_of_nodes_per_axis):
+    # Node Connectivity Matrix
+    global_node_numbers_list = []
+    for j in range(0, amount_of_nodes_per_axis - 1):
+        for i in range(0, amount_of_nodes_per_axis - 1):
+            arr = np.array([amount_of_nodes_per_axis *(j+1) + i, amount_of_nodes_per_axis*(j+1) + (i+1), amount_of_nodes_per_axis *(j) + i, amount_of_nodes_per_axis *(j) + (i+1)])
+            global_node_numbers_list.append(arr)
+
+    global_node_numbers_array = np.array(global_node_numbers_list)
+
+    return global_node_numbers_array
+
+
+def write_files(finite_elements, array_size, result_vector, node_coords, node_connectivity_matrix):
+    '''Writes results to different files'''
+    # Export Writer
+    export_writer = EXPORT( 4,                          # Nodes per Element
+                            len(finite_elements),       # Amount of Elements
+                            array_size,                 # Amount of Nodes
+                            2,                          # Dimension (2D)
+                            result_vector,              # Result Vector                 # TODO old u
+                            node_coords,                # Node Coordinates              # old mesh_coords
+                            node_connectivity_matrix,   # Node Connectivity Matrix      # old global_node_numbers_array
+                            1)                          # Degree of Freedom per Node
+
+    export_writer.writeResults()
+
+
+    # Write values to a .csv file for the CI-CD System
+    filename = 'program_output.csv'
+
+    file = open(filename, 'w', newline='')
+
+    fields = ['coordinates', 'value']
+    writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
+    writer.writeheader()
+
+    for i, value in enumerate(u):
+        writer.writerow({'coordinates': node_coords[i], 'value': u[i]})                     # old mesh_coords
+
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Input values for the Finite-Element-Method Simulation")  # TODO formatter_class=argparse.ArgumentDefaultsHelpFormatter
 
@@ -59,7 +137,8 @@ if __name__ == "__main__":
     # Line Inputs
     opt_args.add_argument('--line_start',   type=[int],   help="X- and Y-Value of the Startpoint of the Line", required=False)
     opt_args.add_argument('--line_end',     type=[int],   help="X- and Y-Value of the Endpoint of the Line", required=False)
-    opt_args.add_argument('--line_value',     type=str,   help="Value or Function to describe the Values of the Line. (X/Y-Coordinates need to be in {}-brackets)", required=False)
+    opt_args.add_argument('--line_value',   type=str,     help="Value or Function to describe the Values of the Line. (X/Y-Coordinates need to be in {}-brackets)", required=False)
+    opt_args.add_argument('--line_points',  type=int,     help="Amount of Points for the Line", required=False)
 
     args = parser.parse_args()
 
@@ -68,9 +147,29 @@ if __name__ == "__main__":
     if (args.line_start and args.line_end and args.line_value) != None:  # check if Line-arguments were given
          line_bool = True
 
-# %%
+    start_time = time.time()
 
-rho = 1  # TODO what does Rho do... despite beeing value in calculation
+    
+    fem_init()
+
+    # creates the array containing the node-equations
+    NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
+
+    # creates the finite elements of the domain
+    finite_elements = element_generation(amount_of_nodes_per_axis, height, width, amount_of_nodes_per_axis)
+
+    stiffness_matrix()
+
+    node_connectivity_matrix()
+
+    write_files()
+
+
+    end_time = time.time()
+
+    print(f"Elapsed Time: {end_time - start_time} seconds.")
+
+# %%
 
 # Hardcoded Inputs
 #width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs_hard_coded()
@@ -83,77 +182,3 @@ rho = 1  # TODO what does Rho do... despite beeing value in calculation
 #line_start, line_end, line_value_function, amount_of_line_points, line_bool = getLineInputs(width, height)
 #mat_tensor = getMaterialTensor()
 #boundary_conditions = getBCInputs()
-
-# User Input throught CMD Arguments
-
-start_time = time.time()
-
-# creates the mesh with all the nodes
-mesh_coords = createMesh(width, height, amount_of_nodes_per_axis)
-
-# gets amount of coordinate pairs
-array_size = mesh_coords.shape[0]
-
-# get the coordinates of the Line
-line_coords = []
-line_coords = getLineCoordinates(line_start, line_end, mesh_coords, amount_of_line_points, line_bool)
-
-line_values = []
-if line_coords:  # checks if list is not empty
-    line_values = getLineValues(line_coords, line_value_function)
-
-# creates the array containing the node-equations
-NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
-
-# creates the finite elements of the domain
-finite_elements = element_generation(amount_of_nodes_per_axis, height, width, amount_of_nodes_per_axis)
-# System-matrix K
-
-K = np.zeros([array_size, array_size])
-
-rhs = np.zeros(array_size)
-K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
-K, rhs = bc.apply_boundary_conditions(K,rhs,boundary_conditions,bc.get_boundary_nodes(mesh_coords,width,height),width,height, amount_of_nodes_per_axis)
-K, rhs = apply_line_values(K, rhs, mesh_coords, line_coords, line_values)
-
-u = np.linalg.solve(K, rhs)
-
-
-# Node Connectivity Matrix
-global_node_numbers_list = []
-for j in range(0, amount_of_nodes_per_axis - 1):
-     for i in range(0, amount_of_nodes_per_axis - 1):
-          arr = np.array([amount_of_nodes_per_axis *(j+1) + i, amount_of_nodes_per_axis*(j+1) + (i+1), amount_of_nodes_per_axis *(j) + i, amount_of_nodes_per_axis *(j) + (i+1)])
-          global_node_numbers_list.append(arr)
-        
-global_node_numbers_array = np.array(global_node_numbers_list)
-
-end_time = time.time()
-
-print(f"Elapsed Time: {end_time-start_time} seconds.")
-
-# Export Writer
-export_writer = EXPORT(4,                       # Nodes per Element
-                       len(finite_elements),    # Amount of Elements
-                       array_size,              # Amount of Nodes
-                       2,                       # Dimension (2D)
-                       u,                       # Result Vector
-                       mesh_coords,             # Node Coordinates
-                       global_node_numbers_array, # Node Connectivity Matrix
-                       1)                       # Degree of Freedom per Node
-
-export_writer.writeResults()
-
-# Write values to a .csv file for the CI-CD System
-filename = 'program_output.csv'
-
-file = open(filename, 'w', newline='')
-
-fields = ['coordinates', 'value']
-writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
-writer.writeheader()
-
-for i, value in enumerate(u):
-        writer.writerow({'coordinates': mesh_coords[i], 'value': u[i]})
-
-# %%

@@ -37,14 +37,8 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
 '''
 
-def fem_init(width, height, amount_of_nodes_per_axis, mesh_coords, line_start, line_end, amount_of_line_points, line_value):
-    '''Initializes Basic Values like Node-Coordinates, Values of the Line etc'''
-    
-     # creates the mesh with all the nodes
-    mesh_coords = createMesh(width, height, amount_of_nodes_per_axis)
-
-    # gets amount of coordinate pairs
-    array_size = mesh_coords.shape[0]
+def create_line_coords_and_values(mesh_coords, line_start, line_end, amount_of_line_points, line_value, line_bool):
+    '''Creates the Coordinates and their respective Values for the Line'''
 
     # get the coordinates of the Line
     line_coords = []
@@ -54,18 +48,18 @@ def fem_init(width, height, amount_of_nodes_per_axis, mesh_coords, line_start, l
     if line_coords:  # checks if list is not empty
         line_values = getLineValues(line_coords, line_value)            # old line_value_function
 
+    return line_coords, line_values
 
-def stiffness_matrix():
+
+def stiffness_matrix(mesh_coords, array_size, mat_tensor, order_num_int, boundary_conditions, width, height, amount_of_nodes_per_axis, line_coords, line_values):
 
     rho = 1  # TODO what does Rho do... despite beeing value in calculation
-
-    # System-matrix K
 
     K = np.zeros([array_size, array_size])
 
     rhs = np.zeros(array_size)
     K, rhs = assembling_algorithm(finite_elements, 4, K, rhs, mat_tensor, order_num_int, rho)
-    K, rhs = bc.apply_boundary_conditions(K,rhs,boundary_conditions,bc.get_boundary_nodes(mesh_coords,width,height),width,height, amount_of_nodes_per_axis)
+    K, rhs = bc.apply_boundary_conditions(K, rhs, boundary_conditions, bc.get_boundary_nodes(mesh_coords,width,height), width, height, amount_of_nodes_per_axis)
     K, rhs = apply_line_values(K, rhs, mesh_coords, line_coords, line_values)
 
     u = np.linalg.solve(K, rhs)
@@ -86,7 +80,7 @@ def node_connectivity_matrix(amount_of_nodes_per_axis):
     return global_node_numbers_array
 
 
-def write_files(finite_elements, array_size, result_vector, node_coords, node_connectivity_matrix):
+def write_files(finite_elements, array_size, result_vector, mesh_coords, node_connectivity_matrix):
     '''Writes results to different files'''
     # Export Writer
     export_writer = EXPORT( 4,                          # Nodes per Element
@@ -94,7 +88,7 @@ def write_files(finite_elements, array_size, result_vector, node_coords, node_co
                             array_size,                 # Amount of Nodes
                             2,                          # Dimension (2D)
                             result_vector,              # Result Vector                 # TODO old u
-                            node_coords,                # Node Coordinates              # old mesh_coords
+                            mesh_coords,                # Node Coordinates              # old mesh_coords
                             node_connectivity_matrix,   # Node Connectivity Matrix      # old global_node_numbers_array
                             1)                          # Degree of Freedom per Node
 
@@ -110,9 +104,8 @@ def write_files(finite_elements, array_size, result_vector, node_coords, node_co
     writer = csv.DictWriter(file, fieldnames=fields, delimiter=';')
     writer.writeheader()
 
-    for i, value in enumerate(u):
-        writer.writerow({'coordinates': node_coords[i], 'value': u[i]})                     # old mesh_coords
-
+    for i, _ in enumerate(result_vector):
+        writer.writerow({'coordinates': mesh_coords[i], 'value': result_vector[i]})                     # old mesh_coords, result_vector
 
 
 if __name__ == "__main__":
@@ -126,59 +119,77 @@ if __name__ == "__main__":
     req_args.add_argument('--height',         type=int,   help="Height of the Domain",                default=100)
     req_args.add_argument('--order_num_int',  type=int,   help="Order of the Numerical Integration",  default=3)      
     req_args.add_argument('--nodes_per_axis', type=int,   help="Amount of Nodes per Axis",            default=10)
-    req_args.add_argument('--mat_tensor',                 help="Material Tensor",                     default=[[1, 0], [0, 1]])
+    req_args.add_argument('--mat_tensor',     type=parse_matrix,            help="Material Tensor",                     default=[[1, 0], [0, 1]])
 
     # Boundary Conditions
-    req_args.add_argument('--left_bound',                 help="Condition of the Left boundary",      default=[100, "Dirichlet"])   # TODO good way to do it ?
-    req_args.add_argument('--top_bound',                  help="Condition of the Top boundary",       default=[0, "Neumann"])
-    req_args.add_argument('--right_bound',                help="Condition of the Right boundary",     default=[0, "Dirichlet"])
-    req_args.add_argument('--bottom_bound',               help="Condition of the Botton boundary",    default=[0, "Neumann"])
+    req_args.add_argument('--left_bound',     type=parse_boundary_condition,   help="Condition of the Left boundary",      default=[100, "Dirichlet"])   # TODO good way to do it ?
+    req_args.add_argument('--top_bound',      type=parse_boundary_condition,   help="Condition of the Top boundary",       default=[0, "Neumann"])
+    req_args.add_argument('--right_bound',    type=parse_boundary_condition,   help="Condition of the Right boundary",     default=[0, "Dirichlet"])
+    req_args.add_argument('--bottom_bound',   type=parse_boundary_condition,   help="Condition of the Botton boundary",    default=[0, "Neumann"])
     
     # Line Inputs
-    opt_args.add_argument('--line_start',   type=[int],   help="X- and Y-Value of the Startpoint of the Line", required=False)
-    opt_args.add_argument('--line_end',     type=[int],   help="X- and Y-Value of the Endpoint of the Line", required=False)
+    opt_args.add_argument('--line_start',   type=parse_coordinates,              help="X- and Y-Value of the Startpoint of the Line", required=False)
+    opt_args.add_argument('--line_end',     type=parse_coordinates,              help="X- and Y-Value of the Endpoint of the Line", required=False)
     opt_args.add_argument('--line_value',   type=str,     help="Value or Function to describe the Values of the Line. (X/Y-Coordinates need to be in {}-brackets)", required=False)
     opt_args.add_argument('--line_points',  type=int,     help="Amount of Points for the Line", required=False)
 
     args = parser.parse_args()
 
-    print(args.mat_tensor)      ##mat_tensor=[[1, 1], [1, 1]]  ## TODO how to properly input Tensor?
-
+    line_bool = True
     if (args.line_start and args.line_end and args.line_value) != None:  # check if Line-arguments were given
-         line_bool = True
+         line_bool = False
 
     start_time = time.time()
 
+    # creates the mesh with all the nodes
+    mesh_coords = createMesh(args.width, 
+                             args.height, 
+                             args.nodes_per_axis)
+
+    # gets amount of coordinate pairs
+    array_size = mesh_coords.shape[0]
     
-    fem_init()
+    # Get Coordinates and their respective Values of the Line
+    line_coords, line_values = create_line_coords_and_values(mesh_coords, 
+                                                             args.line_start, 
+                                                             args.line_end, 
+                                                             args.line_points, 
+                                                             args.line_value, 
+                                                             line_bool)
 
     # creates the array containing the node-equations
     NE_array = get_node_equation_array(array_size, mesh_coords, line_coords)
 
     # creates the finite elements of the domain
-    finite_elements = element_generation(amount_of_nodes_per_axis, height, width, amount_of_nodes_per_axis)
+    finite_elements = element_generation(args.nodes_per_axis, 
+                                         args.height, 
+                                         args.width, 
+                                         args.nodes_per_axis)       #args.nodes_per_axis is in here twice
 
-    stiffness_matrix()
+    bc_array = [
+        bc.BoundaryCondition(args.left_bound[0], args.left_bound[1]),
+        bc.BoundaryCondition(args.top_bound[0], args.top_bound[1]),
+        bc.BoundaryCondition(args.right_bound[0], args.right_bound[1]),
+        bc.BoundaryCondition(args.bottom_bound[0], args.bottom_bound[1])]
 
-    node_connectivity_matrix()
+    stiff_mat, result_vect = stiffness_matrix(mesh_coords, 
+                                              array_size, 
+                                              args.mat_tensor, 
+                                              args.order_num_int, 
+                                              bc_array, args.width, 
+                                              args.height, 
+                                              args.nodes_per_axis, 
+                                              line_coords, 
+                                              line_values)
 
-    write_files()
+    node_connect_mat = node_connectivity_matrix(args.nodes_per_axis)
 
+    write_files(finite_elements, 
+                array_size, 
+                result_vect, 
+                mesh_coords, 
+                node_connect_mat)
 
     end_time = time.time()
 
     print(f"Elapsed Time: {end_time - start_time} seconds.")
-
-# %%
-
-# Hardcoded Inputs
-#width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs_hard_coded()
-#line_start, line_end, line_value_function, amount_of_line_points = getLineInputs_hard_coded(width, height)
-#mat_tensor = getMaterialTensor_hard_coded()
-#boundary_conditions = getBCInputs_hard_coded()
-
-# User Input with CMD as part of the program 
-#width, height, order_num_int, amount_of_nodes_per_axis = getGeometryInputs()
-#line_start, line_end, line_value_function, amount_of_line_points, line_bool = getLineInputs(width, height)
-#mat_tensor = getMaterialTensor()
-#boundary_conditions = getBCInputs()

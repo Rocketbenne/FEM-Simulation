@@ -11,3 +11,7 @@ source/__pycache__
 venv/
 env/
 .env
+
+# Output Files
+program_output.csv
+results.cfs

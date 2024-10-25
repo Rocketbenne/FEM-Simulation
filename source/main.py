@@ -11,6 +11,7 @@ from line import *
 from exportRes import *
 
 import argparse
+from ast import literal_eval
 
 # %%
 
@@ -122,16 +123,16 @@ if __name__ == "__main__":
     req_args.add_argument('--mat_tensor',     type=parse_matrix,            help="Material Tensor",                     default=[[1, 0], [0, 1]])
 
     # Boundary Conditions
-    req_args.add_argument('--left_bound',     type=parse_boundary_condition,   help="Condition of the Left boundary",      default=[100, "Dirichlet"])   # TODO good way to do it ?
-    req_args.add_argument('--top_bound',      type=parse_boundary_condition,   help="Condition of the Top boundary",       default=[0, "Neumann"])
-    req_args.add_argument('--right_bound',    type=parse_boundary_condition,   help="Condition of the Right boundary",     default=[0, "Dirichlet"])
-    req_args.add_argument('--bottom_bound',   type=parse_boundary_condition,   help="Condition of the Botton boundary",    default=[0, "Neumann"])
+    req_args.add_argument('--left_bound',     type=parse_boundary_condition,   help="Condition of the Left boundary",      default="[100, 'Dirichlet']")   # TODO good way to do it ?
+    req_args.add_argument('--top_bound',      type=parse_boundary_condition,   help="Condition of the Top boundary",       default="[0, 'Neumann']")
+    req_args.add_argument('--right_bound',    type=parse_boundary_condition,   help="Condition of the Right boundary",     default="[0, 'Dirichlet']")
+    req_args.add_argument('--bottom_bound',   type=parse_boundary_condition,   help="Condition of the Botton boundary",    default="[0, 'Neumann']")
     
     # Line Inputs
     opt_args.add_argument('--line_start',   type=parse_coordinates,              help="X- and Y-Value of the Startpoint of the Line", required=False)
     opt_args.add_argument('--line_end',     type=parse_coordinates,              help="X- and Y-Value of the Endpoint of the Line", required=False)
     opt_args.add_argument('--line_value',   type=str,     help="Value or Function to describe the Values of the Line. (X/Y-Coordinates need to be in {}-brackets)", required=False)
-    opt_args.add_argument('--line_points',  type=int,     help="Amount of Points for the Line", required=False)
+    opt_args.add_argument('--line_points',  type=int,     help="Amount of Points for the Line", required=False, default=10)
 
     args = parser.parse_args()
 
@@ -172,11 +173,13 @@ if __name__ == "__main__":
         bc.BoundaryCondition(args.right_bound[0], args.right_bound[1]),
         bc.BoundaryCondition(args.bottom_bound[0], args.bottom_bound[1])]
 
+
     stiff_mat, result_vect = stiffness_matrix(mesh_coords, 
                                               array_size, 
                                               args.mat_tensor, 
                                               args.order_num_int, 
-                                              bc_array, args.width, 
+                                              bc_array, 
+                                              args.width, 
                                               args.height, 
                                               args.nodes_per_axis, 
                                               line_coords, 

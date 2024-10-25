@@ -198,15 +198,10 @@ def getBCInputs_hard_coded():
 def parse_boundary_condition(arg):
     '''Function to parse boundary conditions from command line'''
     try:
-        # Evaluate the string as a list, e.g., "[100, 'Dirichlet']"
-        parsed = literal_eval(arg)
-        if isinstance(parsed, list) and len(parsed) == 2:
-            return bc.BoundaryCondition(parsed[0], parsed[1])
-        else:
-            raise argparse.ArgumentTypeError(f"'{arg}' is not a valid boundary condition format.")
-    except Exception as e:
-        raise argparse.ArgumentTypeError(f"'{arg}' is not a valid boundary condition format.") from e
-    
+        # Parse the string representation to a list
+        return literal_eval(arg)
+    except (ValueError, SyntaxError):
+        raise argparse.ArgumentTypeError(f"'{arg}' is not a valid boundary condition format.")
 
 def parse_matrix(arg):
     '''Function to parse a matrix (e.g., material tensor)'''

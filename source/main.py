@@ -81,8 +81,11 @@ def node_connectivity_matrix(amount_of_nodes_per_axis):
     return global_node_numbers_array
 
 
-def write_files(finite_elements, array_size, result_vector, mesh_coords, node_connectivity_matrix):
+def write_files(finite_elements, array_size, result_vector, mesh_coords, node_connectivity_matrix, out_file_name):
     '''Writes results to different files'''
+
+    out_file_name = 'results/' + out_file_name      # Create File in results-Folder
+
     # Export Writer
     export_writer = EXPORT( 4,                          # Nodes per Element
                             len(finite_elements),       # Amount of Elements
@@ -91,13 +94,13 @@ def write_files(finite_elements, array_size, result_vector, mesh_coords, node_co
                             result_vector,              # Result Vector                 # TODO old u
                             mesh_coords,                # Node Coordinates              # old mesh_coords
                             node_connectivity_matrix,   # Node Connectivity Matrix      # old global_node_numbers_array
-                            1)                          # Degree of Freedom per Node
+                            1)                          # Degree of Freedom per Node                          
 
-    export_writer.writeResults()
+    export_writer.writeResults(out_file_name)
 
 
     # Write values to a .csv file for the CI-CD System
-    filename = 'program_output.csv'
+    filename = out_file_name + '.csv'
 
     file = open(filename, 'w', newline='')
 
@@ -114,6 +117,9 @@ if __name__ == "__main__":
 
     req_args = parser.add_argument_group('Base Parameters')
     opt_args = parser.add_argument_group('Optional Parameters')
+
+    # Output File Name
+    req_args.add_argument('--name',           type=str,   help="Name of the output-files",            default='results')
 
     # Basic Inputs
     req_args.add_argument('--width',          type=int,   help="Width of the Domain",                 default=100)
@@ -191,7 +197,8 @@ if __name__ == "__main__":
                 array_size, 
                 result_vect, 
                 mesh_coords, 
-                node_connect_mat)
+                node_connect_mat,
+                args.name)
 
     end_time = time.time()
 

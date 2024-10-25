@@ -15,7 +15,7 @@ RUN_TARGETS = $(shell ls | grep -E '^run_[0-9]+')
 #venv: $(VENV)/bin/activate
 
 run_%:
-	./$(VENV)/bin/python3 source/main.py $(ARGS_$*)
+	./$(VENV)/bin/python3 source/main.py --name $* $(ARGS_$*)
 
 # Command-line arguments for each test case
 ARGS_noInputs = 

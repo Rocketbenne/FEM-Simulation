@@ -86,7 +86,7 @@ class EXPORT:
         self.geom_plot = np.zeros((self.nNodes,3))
         self.geom_plot[:,:-1] = self.geom
       
-    def writeResults(self):
+    def writeResults(self, out_file_name):
         '''
         Writes a HDF5 file containing mesh and results.       
               
@@ -99,8 +99,12 @@ class EXPORT:
         :nodesPerEl: number of nodes per element
         :nElements: number of elements in the domain
         '''
+        self.out_file_name = out_file_name
+
+        if self.out_file_name == None:
+            self.out_file_name = 'results.cfs'
         
-        self.file = h5py.File('results.cfs', 'w')
+        self.file = h5py.File(self.out_file_name + '.cfs', 'w')
        
 #===================================================================================================
 #====================================================================================== SET GROUPS

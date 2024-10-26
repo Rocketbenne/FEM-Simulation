@@ -17,6 +17,7 @@ $(VENV)/bin/activate: requirements.txt
 venv: $(VENV)/bin/activate
 
 run_%:
+	echo "Runnung $*"
 	$(PYTHON) source/main.py --name $* $(ARGS_$*)
 
 # Command-line arguments for each test case
@@ -41,9 +42,12 @@ testbench:
 
 # 
 referenceCheck_%:
+	echo "Validating $*"
 	$(PYTHON) tests/main.py --name $*
 
 validation:
+	echo "Validation starting"
+
 	make referenceCheck_noInputs
 	make referenceCheck_allDirichletSameValue
 	make referenceCheck_horizontalAscending
@@ -57,5 +61,3 @@ clean:
 	find . -type f -name '*.pyc' -delete
 
 .PHONY: all venv run clean testbench run_% validation referenceCheck_%
-
-# TODO cmd still arguments missing 

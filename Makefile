@@ -1,21 +1,23 @@
 # define the name of the virtual environment directory
 VENV := venv
+# use venv if it exists, else use global python3
+PYTHON = $(if $(wildcard $(VENV)/bin/python), $(VENV)/bin/python, python3)
 
 # Detect targets that start with 'run_'
 RUN_TARGETS = $(shell ls | grep -E '^run_[0-9]+')
 
-## default target, when make executed without arguments
-#all: venv
-#
-#$(VENV)/bin/activate: requirements.txt
-#	python3 -m venv $(VENV)
-#	./$(VENV)/bin/pip install -r requirements.txt
-#
-## venv is a shortcut target
-#venv: $(VENV)/bin/activate
+# default target, when make executed without arguments
+all: venv
+
+$(VENV)/bin/activate: requirements.txt
+	python3 -m venv $(VENV)
+	./$(VENV)/bin/pip install -r requirements.txt
+
+# venv is a shortcut target
+venv: $(VENV)/bin/activate
 
 run_%:
-	./$(VENV)/bin/python3 source/main.py --name $* $(ARGS_$*)
+	$(PYTHON) source/main.py --name $* $(ARGS_$*)
 
 # Command-line arguments for each test case
 ARGS_noInputs = 
@@ -34,11 +36,23 @@ testbench:
 	make run_hotLineInMiddle
 	make run_hotDotInMiddle
 
+# 
+referenceCheck_%:
+	$(PYTHON) tests/main.py --name $*
+
+validation:
+	make referenceCheck_noInputs
+	make referenceCheck_allDirichletSameValue
+	make referenceCheck_horizontalAscending
+	make referenceCheck_differentMatTensor
+	make referenceCheck_hotLineInMiddle
+	make referenceCheck_hotDotInMiddle
+
 
 clean:
 	rm -rf $(VENV)
 	find . -type f -name '*.pyc' -delete
 
-.PHONY: all venv run clean testbench run_%
+.PHONY: all venv run clean testbench run_% validation referenceCheck_%
 
 # TODO cmd still arguments missing 

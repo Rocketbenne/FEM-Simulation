@@ -1,11 +1,12 @@
-import pytest
 import csv
+from argparse import ArgumentParser
 
 def read_csv(filepath):
     with open(filepath, mode = 'r') as file:
         reader = csv.DictReader(file)
         return [row for row in reader]
     
+
 def read_column_from_csv(filepath, column_index):
     with open(filepath, mode = 'r') as file:
         reader = csv.reader(file)
@@ -18,13 +19,10 @@ def read_column_from_csv(filepath, column_index):
 
     return values
 
-
 # Checks if the file contains the same values as the reference
-# here only the values of the nodes are checked. not the coordinates of the nodes
-# to pass this test check out the file: create_reference.py
-def test_csv():
-    reference_path = 'tests/reference.csv'
-    program_output_path = 'program_output.csv'
+def test_csv(name: str):
+    reference_path = 'tests/references/' + name + '.csv'
+    program_output_path = 'results/' + name + '.csv'
 
     reference_content = read_column_from_csv(reference_path, 1)
     program_output_content = read_column_from_csv(program_output_path, 1)
@@ -38,5 +36,11 @@ def test_csv():
         diff = abs(reference_content[i] - program_output_content[i])
         assert diff <= TOLERANCE
 
+
 if __name__ == '__main__':
-  pytest.main()
+
+    parser = ArgumentParser()
+    parser.add_argument('--name', type=str, help="Name of the Testcase")
+    args = parser.parse_args()
+
+    test_csv(args.name)

@@ -34,8 +34,8 @@ jobs:
         pip install flake8 pytest numpy matplotlib scipy scikit-learn h5py
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: execute py script
-      run: python source/main.py
+    - name: Start Testbench
+      run: make testbench
 
     - name: Lint with flake8
       run: |
@@ -44,6 +44,7 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Test with pytest
-      run: |
-        pytest
+    - name: Validation using reference solutions
+      run: make validation
+
+  

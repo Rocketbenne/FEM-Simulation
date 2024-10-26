@@ -47,4 +47,9 @@ jobs:
     - name: Validation using reference solutions
       run: make validation
 
+    - name: Upload CFS-Files as Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: cfs-files
+        path: results/*.cfs
   

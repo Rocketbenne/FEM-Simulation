@@ -28,7 +28,10 @@ ARGS_hotLineInMiddle = --nodes_per_axis 9 --left_bound "[0, 'Dirichlet']" --righ
 ARGS_hotDotInMiddle = --nodes_per_axis 9 --left_bound "[0, 'Dirichlet']" --top_bound "[0, 'Dirichlet']" --right_bound "[0, 'Dirichlet']" --bottom_bound "[0, 'Dirichlet']" --line_start [55,55] --line_end [55,55] --line_value 100 --line_points 1
 
 # runs all the testcases
-testbench: 
+testbench:
+	mkdir -p results
+	echo "Running testbench..."
+
 	make run_noInputs
 	make run_allDirichletSameValue
 	make run_horizontalAscending

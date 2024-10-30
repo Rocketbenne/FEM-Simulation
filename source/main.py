@@ -2,6 +2,7 @@
 import numpy as np
 import csv
 import time
+import argparse
 
 from input_handling import *
 from mesh_generation import *
@@ -9,34 +10,6 @@ from finite_element import *
 from finite_element_procedure import *
 from line import *
 from exportRes import *
-
-import argparse
-from ast import literal_eval
-
-# %%
-
-'''
-Numbering of Fem_Knots and Elements
-
-Global Node and Equation Numbers
-From left top to right top, then next row to the right ( as one reads )
-Local Node Numbers starting from bottom left in a counter-clockwise rotation
-
-    1---------2---------3
-    | 4     3 | 4     3 |
-    |    1    |    2    |
-    | 1     2 | 1     2 |
-    4---------5---------6
-    | 4     3 | 4     3 |
-    |    3    |    4    |
-    | 1     2 | 1     2 |
-    7---------8---------9
-
-    Outest Layer: Global Node Number
-    Second Layer: Local Node Number
-    Number in the Middle: Global Element Number
-
-'''
 
 def create_line_coords_and_values(mesh_coords, line_start, line_end, amount_of_line_points, line_value, line_bool):
     '''Creates the Coordinates and their respective Values for the Line'''
@@ -47,7 +20,7 @@ def create_line_coords_and_values(mesh_coords, line_start, line_end, amount_of_l
 
     line_values = []
     if line_coords:  # checks if list is not empty
-        line_values = getLineValues(line_coords, line_value)            # old line_value_function
+        line_values = getLineValues(line_coords, line_value)
 
     return line_coords, line_values
 
@@ -91,9 +64,9 @@ def write_files(finite_elements, array_size, result_vector, mesh_coords, node_co
                             len(finite_elements),       # Amount of Elements
                             array_size,                 # Amount of Nodes
                             2,                          # Dimension (2D)
-                            result_vector,              # Result Vector                 # TODO old u
-                            mesh_coords,                # Node Coordinates              # old mesh_coords
-                            node_connectivity_matrix,   # Node Connectivity Matrix      # old global_node_numbers_array
+                            result_vector,              # Result Vector
+                            mesh_coords,                # Node Coordinates
+                            node_connectivity_matrix,   # Node Connectivity Matrix
                             1)                          # Degree of Freedom per Node                          
 
     export_writer.writeResults(out_file_name)
@@ -109,7 +82,7 @@ def write_files(finite_elements, array_size, result_vector, mesh_coords, node_co
     writer.writeheader()
 
     for i, _ in enumerate(result_vector):
-        writer.writerow({'coordinates': mesh_coords[i], 'value': result_vector[i]})                     # old mesh_coords, result_vector
+        writer.writerow({'coordinates': mesh_coords[i], 'value': result_vector[i]})
 
 
 if __name__ == "__main__":
@@ -129,7 +102,7 @@ if __name__ == "__main__":
     req_args.add_argument('--mat_tensor',     type=parse_matrix,            help="Material Tensor",                     default=[[1, 0], [0, 1]])
 
     # Boundary Conditions
-    req_args.add_argument('--left_bound',     type=parse_boundary_condition,   help="Condition of the Left boundary",      default="[100, 'Dirichlet']")   # TODO good way to do it ?
+    req_args.add_argument('--left_bound',     type=parse_boundary_condition,   help="Condition of the Left boundary",      default="[100, 'Dirichlet']")
     req_args.add_argument('--top_bound',      type=parse_boundary_condition,   help="Condition of the Top boundary",       default="[0, 'Neumann']")
     req_args.add_argument('--right_bound',    type=parse_boundary_condition,   help="Condition of the Right boundary",     default="[0, 'Dirichlet']")
     req_args.add_argument('--bottom_bound',   type=parse_boundary_condition,   help="Condition of the Botton boundary",    default="[0, 'Neumann']")

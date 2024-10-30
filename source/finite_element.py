@@ -1,6 +1,29 @@
 import numpy as np
 import boundary_condition as bc
 
+'''
+Numbering of Fem_Knots and Elements
+
+Global Node and Equation Numbers
+From left top to right top, then next row to the right ( as one reads )
+Local Node Numbers starting from bottom left in a counter-clockwise rotation
+
+    1---------2---------3
+    | 4     3 | 4     3 |
+    |    1    |    2    |
+    | 1     2 | 1     2 |
+    4---------5---------6
+    | 4     3 | 4     3 |
+    |    3    |    4    |
+    | 1     2 | 1     2 |
+    7---------8---------9
+
+    Outest Layer: Global Node Number
+    Second Layer: Local Node Number
+    Number in the Middle: Global Element Number
+
+'''
+
 
 class FEM_Element:
     def __init__(self, global_element_number, global_node_numbers, global_cords, boundaries=None):

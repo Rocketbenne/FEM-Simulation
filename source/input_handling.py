@@ -1,20 +1,43 @@
-#%%
-# First we let the user "input" be done throught putting numbers in the variables
-# Later on we might do it throught the cmd or a pop-up-window
 import numpy as np
 import boundary_condition as bc
 
 import argparse
 from ast import literal_eval
 
-# used for testing the program, just wirte the values in here
-def getGeometryInputs_hard_coded():
-    width, height, order_num_int, amount_of_nodes_per_axis = 90, 180, 4, 20
+# Functions to use for correct use throught CMD-Arguments
+def parse_boundary_condition(arg):
+    '''Function to parse boundary conditions from command line'''
+    try:
+        # Parse the string representation to a list
+        return literal_eval(arg)
+    except (ValueError, SyntaxError):
+        raise argparse.ArgumentTypeError(f"'{arg}' is not a valid boundary condition format.")
 
-    return width, height, order_num_int, amount_of_nodes_per_axis
+
+def parse_matrix(arg):
+    '''Function to parse a matrix (e.g., material tensor)'''
+    try:
+        # Safely parse the input string into a Python list
+        matrix = literal_eval(arg)
+        # Check if the parsed value is a valid 2D list (list of lists)
+        if all(isinstance(row, list) for row in matrix):
+            return matrix
+        else:
+            raise argparse.ArgumentTypeError(f"'{arg}' is not a valid matrix format.")
+    except Exception as e:
+        raise argparse.ArgumentTypeError(f"'{arg}' is not a valid matrix format.") from e
+    
+
+def parse_coordinates(arg):
+    '''Function to parse list of coordinates (for line_start, line_end)'''
+    try:
+        # Evaluate the string as a list of two numbers, e.g., "[0, 0]"
+        return list(literal_eval(arg))
+    except Exception as e:
+        raise argparse.ArgumentTypeError(f"'{arg}' is not a valid coordinate format.") from e
 
 
-# for finished version, lets user input values and error-checks them
+# Inputs from User throught manual inputs in the console
 def getGeometryInputs():
     width, height, order_num_int, amount_of_nodes_per_axis = 0, 0, 0, 0
 
@@ -100,14 +123,6 @@ def getNumberFromUserInRangeWithZero(range):
         print("Please enter a Number greater than 0 and less than " + str(range) + ".\n")
 
 
-def getNumberFromUserWithAll():
-    while(1):
-        number = input()
-        if(number.isnumeric()):  # checks if value is numeric
-            return int(number)
-        print("Please enter a Number.\n")
-
-
 # user input for line with given value
 def getLineInputs(width, height):
     start, end, value_function, amount_of_line_points, = (0, 0), (0, 0), "", 0
@@ -137,19 +152,7 @@ def getLineInputs(width, height):
     return start, end, value_function, amount_of_line_points, line_bool
 
 
-def getLineInputs_hard_coded(height, width):
-    start = (50, 0)
-    end = (50, 180)
-    value_function = "0"
-    amount_of_line_points = 20
-
-    #start = (10, 160)
-    #end = (57, 100)
-    #value_function = "{x}+{y}"
-
-    return start, end, value_function, amount_of_line_points
-
-
+# user input for the material tensor
 def getMaterialTensor():
     print("First value of the material Tensor: ")
     value1 = getNumberWithZero()
@@ -161,11 +164,7 @@ def getMaterialTensor():
     value4 = getNumberWithZero()
     return np.array([[value1, value2],[value3, value4]])
 
-
-def getMaterialTensor_hard_coded():
-    return np.array([[1, 1], [1, 1]])
-
-
+# user input for all the Boundary Conditions
 def getBCInputs():
     left_side = getBCInput("left")
     top_side = getBCInput("top")
@@ -174,12 +173,11 @@ def getBCInputs():
     return [bc.BoundaryCondition(left_side[1], left_side[0]),bc.BoundaryCondition(top_side[1], top_side[0]),bc.BoundaryCondition(right_side[1], right_side[0]),bc.BoundaryCondition(bottom_side[1], bottom_side[0])]
 
 
+# user input for a single boundary condition
 def getBCInput(side):
     bc = (0,0)
     print(f"Input the {side} boundary type  0=Dirichlet 1=Neumann: ")
     bc = (getNumberFromUserInRangeWithZero(1), bc[1])
-
-    
 
     if bc[0] == 0:
         bc = ("Dirichlet", bc[1])
@@ -191,36 +189,25 @@ def getBCInput(side):
     return bc
 
 
+# Hardcoded values to test the program, just write the needed values in here
+def getGeometryInputs_hard_coded():
+    width, height, order_num_int, amount_of_nodes_per_axis = 90, 180, 4, 20
+
+    return width, height, order_num_int, amount_of_nodes_per_axis
+
+
 def getBCInputs_hard_coded():
     return [bc.BoundaryCondition(100,"Dirichlet"),bc.BoundaryCondition(100,"Dirichlet"),bc.BoundaryCondition(0,"Dirichlet"),bc.BoundaryCondition(0,"Dirichlet")]
 
 
-def parse_boundary_condition(arg):
-    '''Function to parse boundary conditions from command line'''
-    try:
-        # Parse the string representation to a list
-        return literal_eval(arg)
-    except (ValueError, SyntaxError):
-        raise argparse.ArgumentTypeError(f"'{arg}' is not a valid boundary condition format.")
+def getMaterialTensor_hard_coded():
+    return np.array([[1, 1], [1, 1]])
 
-def parse_matrix(arg):
-    '''Function to parse a matrix (e.g., material tensor)'''
-    try:
-        # Safely parse the input string into a Python list
-        matrix = literal_eval(arg)
-        # Check if the parsed value is a valid 2D list (list of lists)
-        if all(isinstance(row, list) for row in matrix):
-            return matrix
-        else:
-            raise argparse.ArgumentTypeError(f"'{arg}' is not a valid matrix format.")
-    except Exception as e:
-        raise argparse.ArgumentTypeError(f"'{arg}' is not a valid matrix format.") from e
-    
 
-def parse_coordinates(arg):
-    '''Function to parse list of coordinates (for line_start, line_end)'''
-    try:
-        # Evaluate the string as a list of two numbers, e.g., "[0, 0]"
-        return list(literal_eval(arg))
-    except Exception as e:
-        raise argparse.ArgumentTypeError(f"'{arg}' is not a valid coordinate format.") from e
+def getLineInputs_hard_coded():
+    start = (50, 0)
+    end = (50, 180)
+    value_function = "0"
+    amount_of_line_points = 20
+
+    return start, end, value_function, amount_of_line_points

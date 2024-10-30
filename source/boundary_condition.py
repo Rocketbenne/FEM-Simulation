@@ -8,9 +8,7 @@ class BoundaryCondition:
         self.value = value
         self.bc_type = bc_type
 
-    # Extracts the boundary nodes and returns them as 2D Array where row is for left,top,right,bottom
-
-
+# Extracts the boundary nodes and returns them as 2D Array where row is for left,top,right,bottom
 # and the col is another array with the corresponding nodes
 # Of each side left side is the corner from inside perspective
 ''''
@@ -20,7 +18,11 @@ class BoundaryCondition:
     bottom: Node    ...
 '''
 
-
+# Get Nodes which are on the 4 bounds of the domain
+# Inputs: Coordinates of the Mesh
+#         Width of the domain
+#         Height of the domain
+# Output: Tuple containing the nodes of the 4 bounds in order: Left, Top, Right, Bottom
 def get_boundary_nodes(mesh_coords, width, height):
     x_values = mesh_coords[:, 0]  # Extract all x-coordinates
     y_values = mesh_coords[:, 1]  # Extract all y-coordinates
@@ -33,6 +35,8 @@ def get_boundary_nodes(mesh_coords, width, height):
     boundary_nodes = (left_nodes,top_nodes,right_nodes,bottom_nodes)
     return boundary_nodes
 
+
+# Apply the boundary Conditions to the System matrix and the right hand side vector
 def apply_boundary_conditions(system_matrix, rhs, boundary_conditions, boundary_nodes, width, height,
                               amount_of_nodes_per_axis):
     for side, b_nodes in zip(boundary_conditions, boundary_nodes):
@@ -49,6 +53,8 @@ def apply_boundary_conditions(system_matrix, rhs, boundary_conditions, boundary_
                 raise ValueError("Invalid boundary condition type")
     return system_matrix, rhs
 
+
+# Calculate the global node number of a specific node
 def find_global_node_nr(node, width, height, amount_of_nodes_per_axis):
     x_step_size = width / (amount_of_nodes_per_axis - 1)
     y_step_size = height / (amount_of_nodes_per_axis - 1)

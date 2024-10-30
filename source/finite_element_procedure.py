@@ -6,6 +6,7 @@ class Type(Enum):
     Dirichlet = 0
     Neumann = 1
 
+
 # Knotengleichungsarray / Node-Equation-Array
 # Inputs: amount of nodes in the domain
 #         coordinates of the domain 
@@ -39,6 +40,7 @@ def get_node_equation_array(array_size, mesh_coords, line_coords = []):
 
     return node_equation_array
 
+
 # Gleichungsarray / Equation-Array
 # Inputs: array containing the finite elements of the domain
 #         local node number [1 -4]
@@ -47,11 +49,16 @@ def get_node_equation_array(array_size, mesh_coords, line_coords = []):
 def EQ(finite_elements, local_number, element_number):
     return finite_elements[element_number].get_global_node_numbers()[local_number - 1]
 
+
 # Assembling-Algorithm from the VO
 # Inputs: array of finite-element-objects
 #         amount of element nodes
 #         System-matrix K
-# Output: System-matrix K
+#         Right hand side vector
+#         Material Tensor 
+#         Order of the Numerical Integration
+#         Rho
+# Outputs: System-matrix K, Right hand side vector
 def assembling_algorithm(finite_elements, number_of_element_nodes, K, Rhs, material_tensor, order, rho):
     for e in range(finite_elements.size):
 

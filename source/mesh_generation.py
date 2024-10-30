@@ -2,9 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches  # used to show the bounding box in the matplotlib plot
 
-#%%
-#NODE_AMOUNT_PER_AXIS = 10  # meaning in x and in y direction respectively
-
 # Creates the nodes of the mesh
 # Inputs: width and height of the domain
 # Output: coordinates of the nodes
@@ -27,6 +24,7 @@ def createMesh(width, height, amount_of_nodes_per_axis):
     mesh_coords = np.column_stack((x_coords, y_coords))
 
     return mesh_coords
+
 
 # visualizes the nodes of the mesh in a matplotlib-plot
 # Input: coordinates of the nodes
@@ -53,4 +51,3 @@ def visualize_mesh(mesh_coords, line_coords):
     #plt.legend()   
     plt.show()
     return 0
-

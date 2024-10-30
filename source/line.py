@@ -5,13 +5,15 @@ import math
 # Inputs: start-coordinate of the line
 #         end-coordinate of the line
 #         coordinates of the mesh
+#         amount of points on the line
+#         boolean to check if Line-Inputs are given
 # Output: The line represented as coordinates of the mesh
 def getLineCoordinates(start, end, mesh_coords, amount_of_line_points, line_bool):
 
     if line_bool:
         return []
 
-    x = np.linspace(start[0], end[0], amount_of_line_points) # Problem bei Kommazohlen
+    x = np.linspace(start[0], end[0], amount_of_line_points)
     y = np.linspace(start[1], end[1], amount_of_line_points)
     coords = np.column_stack((x, y))
 
@@ -39,6 +41,7 @@ def getLineCoordinates(start, end, mesh_coords, amount_of_line_points, line_bool
 
     return values
 
+
 # Generates the value of the given function and the given coordinates
 # The Function needs to have the variables x and y in curved brackets
 # Inputs: coordinates of the line
@@ -54,7 +57,7 @@ def getLineValues(line_coords, function):
     return values
 
 
-# calculates the value of the function at the position (x, y)
+# Calculates the value of the function at the position (x, y)
 # Inputs: Function-Expression
 #         Value for x
 #         Value for y
@@ -70,6 +73,7 @@ def evaluate_function(function, x, y):
         print("Error evaluating function:", e)
         return None
     
+
 # Applies the values of the given line to the system-matrix and right hand side
 # Inputs: System Matrix
 #         Right Hand Side vector
@@ -79,8 +83,7 @@ def evaluate_function(function, x, y):
 # Output: System Matrix
 #         Right Hand Side vector
 def apply_line_values(K, rhs, mesh_coords, line_coords, line_values):
-
-    # apply line
+    
     for i in enumerate(mesh_coords):
         coord = mesh_coords[i[0]]
         for j in enumerate(line_coords):

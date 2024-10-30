@@ -24,7 +24,6 @@ Local Node Numbers starting from bottom left in a counter-clockwise rotation
 
 '''
 
-
 class FEM_Element:
     def __init__(self, global_element_number, global_node_numbers, global_cords, boundaries=None):
         self.global_element_number = global_element_number
@@ -46,8 +45,10 @@ class FEM_Element:
 
 
 # Generation of the finite elements in the domain
-# Inputs: Array containing the the node equation numbers
-#         amount of nodes per axis
+# Inputs: Dimension of the domain
+#         Heigth of the domain
+#         Width of the domain
+#         Amount of Nodes per Axis
 # Output: Array containing the finite Elements
 def element_generation(dimension, height, width, amount_of_nodes_per_axis):
     elements = np.empty((dimension - 1) ** 2, dtype=FEM_Element)
@@ -74,4 +75,3 @@ def element_generation(dimension, height, width, amount_of_nodes_per_axis):
             element_number += 1
 
     return elements
-

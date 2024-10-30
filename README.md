@@ -7,12 +7,16 @@ Requirements were all fullfilled accordingly. Ultimately the CI-CD Pipeline was 
 Because of these unfullfilled goals of the project and the desire to improve the functionality and accessibility of the code, the decision was made to continue the project.  
 Idealy this tool can ultimately be used to accept various combinations of inputs and then calculate and show the numerical simulation as a picture which can be downloaded throught the artifacts of a pipeline.  
 
-#### Features in work:
-- Improved Input System 
+#### Features in progress:
 - Neumann Boundary Conditions unequal to zero
 - Creating picture out of the result-values
-- Creating Functional CI-CD Pipeline to check atleast some simple testcases
 - Optimization of the Code
+
+#### Features added
+- Improved Input System
+    - Input now expected throught CMD-Arguments
+- Creating Functional CI-CD Pipeline to check atleast some simple testcases
+    - Output-cfs-files can be downlaoded as artifacts
 
 ------
 ## Original Project

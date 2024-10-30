@@ -10,8 +10,8 @@ Idealy this tool can ultimately be used to accept various combinations of inputs
 #### Features in work:
 - Improved Input System 
 - Neumann Boundary Conditions unequal to zero
-- Creating picture out of the result-valules
-- Creating Functional CI-CD Pipeline to check atleast simple some testcases
+- Creating picture out of the result-values
+- Creating Functional CI-CD Pipeline to check atleast some simple testcases
 - Optimization of the Code
 
 ------
